@@ -11,7 +11,6 @@ const Navbar: FC<NavbarProps> = ({ classList }) => {
   const pathName = usePathname();
 
   const isActive = (route: string) => {
-    console.log(route);
     return route === pathName || route === "/";
   };
   return (
@@ -26,9 +25,9 @@ const Navbar: FC<NavbarProps> = ({ classList }) => {
       <div className="flex flex-col flex-grow">
         {/* Links */}
         <Link
-          href="/"
+          href="/dashboard"
           className={`p-4 block ${
-            isActive("/") ? "bg-gray-700" : "hover:bg-gray-700"
+            isActive("/dashboard") ? "bg-gray-700" : "hover:bg-gray-700"
           }`}
         >
           Dashboard
@@ -38,7 +37,7 @@ const Navbar: FC<NavbarProps> = ({ classList }) => {
             href={`/courses/${courseName}`}
             className={`p-4 block ${
               isActive(`/courses/${courseName}`)
-                ? "bg-navbarColor"
+                ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
           >
