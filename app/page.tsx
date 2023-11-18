@@ -2,14 +2,11 @@
 import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
+import { useUserContext } from "./context/userContext";
 
 export default function Home() {
+  // const { userId, setUserId, courseList, setCourseList } = useUserContext();
   //this will be sent to navbar by using useContext
-  const [classList, setClassList] = useState<string[]>([
-    "cs3312",
-    "cs2200",
-    "cs4400",
-  ]);
 
   const router = useRouter();
 
