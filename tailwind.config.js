@@ -51,6 +51,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         navbarColor: "#3A4A58",
+        sidebarColor: "#697987",
       },
       borderRadius: {
         lg: "var(--radius)",

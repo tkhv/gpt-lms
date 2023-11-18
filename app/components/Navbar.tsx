@@ -1,17 +1,22 @@
 "use client";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { FC } from "react";
+import { FC, useContext } from "react";
+import { useCourseContext } from "../context/coureContext";
 
 type NavbarProps = {
-  classList: string[];
+  courseList: string[];
 };
 
-const Navbar: FC<NavbarProps> = ({ classList }) => {
+const Navbar: FC<NavbarProps> = ({ courseList }) => {
+  const { currentCourse, setCurrentCourse } = useCourseContext();
+
   const pathName = usePathname();
 
   const isActive = (route: string) => {
-    return route === pathName || route === "/";
+    const pathList = pathName.split("/");
+    /*pathList = ["", dashboard] or ["", courses, [courseName], ...]*/
+    return pathList.length > 2 ? route === pathList[2] : route === pathList[1];
   };
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
@@ -27,19 +32,21 @@ const Navbar: FC<NavbarProps> = ({ classList }) => {
         <Link
           href="/dashboard"
           className={`p-4 block ${
-            isActive("/dashboard") ? "bg-gray-700" : "hover:bg-gray-700"
+            isActive("dashboard") ? "bg-sidebarColor" : "hover:bg-sidebarColor"
           }`}
+          onClick={() => setCurrentCourse("")}
         >
           Dashboard
         </Link>
-        {classList.map((courseName: string) => (
+        {courseList.map((courseName: string) => (
           <Link
             href={`/courses/${courseName}`}
             className={`p-4 block ${
-              isActive(`/courses/${courseName}`)
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
+              isActive(`${courseName}`)
+                ? "bg-sidebarColor"
+                : "hover:bg-sidebarColor"
             }`}
+            onClick={() => setCurrentCourse(courseName)}
           >
             {courseName}
           </Link>
