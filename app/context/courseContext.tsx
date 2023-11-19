@@ -18,6 +18,13 @@ const CourseContext = createContext<CourseData>({
   setCurrentCourse: (): string => "",
 });
 
+export type Course = {
+  id: number;
+  name: string;
+};
+
+export type CourseList = Course[];
+
 export const CourseContextProvider = ({
   children,
 }: {
