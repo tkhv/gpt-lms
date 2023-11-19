@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FC, useContext } from "react";
-import { useCourseContext, Course, CourseList } from "../context/courseContext";
+import { useCourseContext } from "../context/courseContext";
+import { Course, CourseList } from "@/lib/types";
 
 import { UserNav } from "./user-nav";
 
