@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useCourseContext } from "../context/coureContext";
+import { useCourseContext } from "../context/courseContext";
 
 const Sidebar: FC = () => {
   const { currentCourse, setCurrentCourse } = useCourseContext();

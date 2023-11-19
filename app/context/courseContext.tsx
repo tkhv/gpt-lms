@@ -18,7 +18,11 @@ const CourseContext = createContext<CourseData>({
   setCurrentCourse: (): string => "",
 });
 
-export const CourseContextProvider = ({ children }) => {
+export const CourseContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [currentCourse, setCurrentCourse] = useState("");
 
   return (

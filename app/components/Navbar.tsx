@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FC, useContext } from "react";
-import { useCourseContext } from "../context/coureContext";
+import { useCourseContext } from "../context/courseContext";
 
 type NavbarProps = {
   courseList: string[];
