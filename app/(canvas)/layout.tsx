@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/app/components/Navbar";
 import { useState, createContext, use, SetStateAction, Dispatch } from "react";
 import { useUserContext } from "../context/userContext";
-import { CourseContextProvider } from "../context/courseContext";
+import { CourseContextProvider, CourseList } from "../context/courseContext";
 
 export default function CanvasLayout({
   children,
@@ -15,7 +15,12 @@ export default function CanvasLayout({
   maybe extract the courseList by using api call here would be better
   */
   // const { userId, setUserId, courseList, setCourseList } = useUserContext();
-  const courseList = ["cs3312", "cs2200", "cs4400"];
+
+  const courseList: CourseList = [
+    { id: 1, name: "cs3312" },
+    { id: 2, name: "cs2200" },
+    { id: 3, name: "cs4400" },
+  ];
 
   return (
     <div className="flex">

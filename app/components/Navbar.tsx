@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FC, useContext } from "react";
-import { useCourseContext } from "../context/courseContext";
+import { useCourseContext, Course, CourseList } from "../context/courseContext";
 
 type NavbarProps = {
-  courseList: string[];
+  courseList: CourseList;
 };
 
 const Navbar: FC<NavbarProps> = ({ courseList }) => {
@@ -38,17 +38,18 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
         >
           Dashboard
         </Link>
-        {courseList.map((courseName: string) => (
+        {courseList.map((course: Course) => (
           <Link
-            href={`/courses/${courseName}`}
+            key={course.id}
+            href={`/courses/${course.name}`}
             className={`p-4 block ${
-              isActive(`${courseName}`)
+              isActive(`${course.name}`)
                 ? "bg-sidebarColor"
                 : "hover:bg-sidebarColor"
             }`}
-            onClick={() => setCurrentCourse(courseName)}
+            onClick={() => setCurrentCourse(course.name)}
           >
-            {courseName}
+            {course.name}
           </Link>
         ))}
       </div>
