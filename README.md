@@ -4,22 +4,26 @@ Microsoft AI Classroom Hackathon 2023 Submission
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Installation
 
-First, run the development server:
+Add the following to your .env:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+AZURE_STORAGE_CONNECTION_STRING=""
+AZURE_ACCOUNT_NAME=""
+AZURE_STORAGE_URL=""
+AZURE_TENANT_ID=""
+AZURE_CLIENT_ID=""
+AZURE_CLIENT_SECRET=""
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then install and run the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
+
+The page opens on [http://localhost:3000](http://localhost:3000).
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.

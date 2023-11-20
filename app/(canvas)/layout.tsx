@@ -4,7 +4,8 @@ import { Inter } from "next/font/google";
 import Navbar from "@/app/components/Navbar";
 import { useState, createContext, use, SetStateAction, Dispatch } from "react";
 import { useUserContext } from "../context/userContext";
-import { CourseContextProvider, CourseList } from "../context/courseContext";
+import { CourseContextProvider } from "../context/courseContext";
+import { CourseList } from "@/lib/types";
 
 export default function CanvasLayout({
   children,

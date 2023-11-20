@@ -2,7 +2,10 @@
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FC, useContext } from "react";
-import { useCourseContext, Course, CourseList } from "../context/courseContext";
+import { useCourseContext } from "../context/courseContext";
+import { Course, CourseList } from "@/lib/types";
+
+import { UserNav } from "./user-nav";
 
 type NavbarProps = {
   courseList: CourseList;
@@ -20,12 +23,9 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
   };
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
-      <div className="p-4 flex flex-col items-center">
-        {/* Replace with your user icon */}
-        <div className="rounded-full bg-gray-600 h-12 w-12 flex items-center justify-center">
-          U
-        </div>
-        <span className="ml-2">USERNAME</span>
+      <div className="p-4 mb-2 mt-4 flex flex-col items-center">
+        {/* Replace with logged in username */}
+        <UserNav username={"USERNAME"} />
       </div>
       <div className="flex flex-col flex-grow">
         {/* Links */}
