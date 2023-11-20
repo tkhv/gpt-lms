@@ -10,7 +10,7 @@ type File = {
 };
 type FilesList = File[];
 
-/* This GET endpoint is called by the client to initalize a container for a course.
+/* This GET endpoint is called by the client to create a container for a course.
     A 200 response is returned if the container is created successfully. 
     Else, a 500 response is returned. */
 

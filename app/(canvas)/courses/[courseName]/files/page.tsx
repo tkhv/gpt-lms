@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { listBlobs, initCourseContainer } from "@/lib/BlobServiceCalls";
+// import { listBlobs, initCourseContainer } from "@/lib/BlobServiceCalls";
 
 export default async function Files({
   params,
