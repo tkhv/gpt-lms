@@ -48,11 +48,12 @@ export default async function Course({
 }: {
   params: { courseName: string };
 }) {
-  const content = await getHomePage(params.courseName);
+  // const content = await getHomePage(params.courseName); FETCH DISABLED WHILE DEVELOPING
 
   return (
     <div>
-      <ReactMarkdown className="prose" children={content} />
+      {/* <ReactMarkdown className="prose" children={content} /> FETCH DISABLED WHILE DEVELOPING*/}
+      <h1>Course {params.courseName}</h1>
     </div>
   );
 }
