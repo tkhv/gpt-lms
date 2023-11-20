@@ -10,19 +10,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// import { listBlobs, initCourseContainer } from "@/lib/BlobServiceCalls";
+async function getFilesList(courseName: string) {
+  let res = await fetch(
+    "http://localhost:3000/api/" + courseName + "/listFiles",
+    {
+      method: "GET",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return await res.json();
+}
 
 export default async function Files({
   params,
 }: {
   params: { courseName: string };
 }) {
-  // Fetches all files in the current course's container.
-  const filesList: FilesList = await listBlobs("practice");
-
-  // initCourseContainer("cs1100"); This one creates a container for a new course.
-  // We dont call it here but I was just testing it here.
-
+  const courseName = params.courseName;
+  const filesList: FilesList = await getFilesList(courseName);
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
@@ -44,7 +53,7 @@ export default async function Files({
             ? filesList.map((file: File) => (
                 <TableRow key={file.name}>
                   <TableCell>{file.name}</TableCell>
-                  <TableCell>delete btn</TableCell>
+                  <TableCell>delete btn here</TableCell>
                 </TableRow>
               ))
             : "No files found"}
