@@ -18,11 +18,12 @@ const Sidebar: FC = () => {
 
   const isActive = (it: string) => {
     // If the item is 'Home', check against the base path ('/')
+    const paramList = pathName.split("/");
     if (it === "Home") {
-      return pathName === `${originPath}`;
+      return paramList.length === 3;
     }
     // Otherwise, compare against the lowercased item
-    return pathName === `${originPath}/${it.toLocaleLowerCase()}`;
+    return paramList[3] === it.toLocaleLowerCase();
   };
 
   return (

@@ -1,3 +1,5 @@
+import { string } from "zod";
+
 export type Course = {
   id: number;
   name: string;
@@ -12,3 +14,12 @@ export type File = {
 };
 
 export type FilesList = File[];
+
+export type Quiz = {
+  questionNum: number;
+  questionType: "MCQ" | "FRQ";
+  question: string;
+  options: string[];
+  answer: number;
+  points: number;
+};

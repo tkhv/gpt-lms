@@ -6,6 +6,7 @@ import { useState, createContext, use, SetStateAction, Dispatch } from "react";
 import { useUserContext } from "../context/userContext";
 import { CourseContextProvider } from "../context/courseContext";
 import { CourseList } from "@/lib/types";
+import { UserTypeContextProvider } from "../context/userTypeContext";
 
 export default function CanvasLayout({
   children,
@@ -25,10 +26,12 @@ export default function CanvasLayout({
 
   return (
     <div className="flex">
-      <CourseContextProvider>
-        <Navbar courseList={courseList} />
-        {children}
-      </CourseContextProvider>
+      <UserTypeContextProvider>
+        <CourseContextProvider>
+          <Navbar courseList={courseList} />
+          {children}
+        </CourseContextProvider>
+      </UserTypeContextProvider>
     </div>
   );
 }
