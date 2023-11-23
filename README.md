@@ -20,6 +20,11 @@ AZURE_COSMOSDB_PG_URL=""
 AZURE_COSMOSDB_PG_USER=""
 AZURE_COSMOSDB_PG_PASSWORD=""
 AZURE_COSMOSDB_PG_DBNAME=""
+
+AUTH_SECRET="" # Randomly generated string with `openssl rand -base64 32`
+NEXTAUTH_URL="http://localhost:3000"
+GITHUB_ID=""
+GITHUB_SECRET=""
 ```
 
 Then install and run the development server:
