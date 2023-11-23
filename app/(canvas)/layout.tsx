@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 import Navbar from "@/app/components/Navbar";
 import { CourseContextProvider } from "../context/courseContext";
@@ -10,6 +11,10 @@ export default async function CanvasLayout({
   children: React.ReactNode;
 }) {
   const session = await auth(); // This is from next-auth after OAuth login
+  if (!session) {
+    redirect("/api/auth/signin?callbackUrl=/dashboard");
+    return null;
+  }
   if (!session) {
     return;
   }
