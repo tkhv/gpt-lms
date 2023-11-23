@@ -10,7 +10,6 @@ export default async function Home() {
     redirect("/api/auth/signin?callbackUrl=/dashboard");
     return null;
   } else {
-    console.log(JSON.stringify(session, null, 2));
     redirect("/dashboard");
   }
 }

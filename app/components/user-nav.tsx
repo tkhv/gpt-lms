@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -12,7 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AddCourseDialog } from "./AddCourseDialog";
 
-export function UserNav({ username }: { username: string }) {
+export function UserNav({
+  username,
+  imageURL,
+}: {
+  username: string;
+  imageURL: string;
+}) {
   return (
     <Dialog>
       <DropdownMenu>
@@ -22,7 +28,8 @@ export function UserNav({ username }: { username: string }) {
             className="relative h-8 w-8 rounded-full text-black"
           >
             <Avatar className="h-14 w-14">
-              <AvatarFallback>UN</AvatarFallback>
+              <AvatarImage src={imageURL} />
+              <AvatarFallback>GPT</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

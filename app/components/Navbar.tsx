@@ -1,17 +1,18 @@
 "use client";
 import Link from "next/link";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { FC, useContext } from "react";
+import { usePathname } from "next/navigation";
+import { FC } from "react";
 import { useCourseContext } from "../context/courseContext";
-import { Course, CourseList } from "@/lib/types";
+import { Course, CourseList, User } from "@/lib/types";
 
 import { UserNav } from "./user-nav";
 
 type NavbarProps = {
   courseList: CourseList;
+  user: User;
 };
 
-const Navbar: FC<NavbarProps> = ({ courseList }) => {
+const Navbar: FC<NavbarProps> = ({ courseList, user }) => {
   const { currentCourse, setCurrentCourse } = useCourseContext();
 
   const pathName = usePathname();
@@ -24,8 +25,7 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
       <div className="p-4 mb-2 mt-4 flex flex-col items-center">
-        {/* Replace with logged in username */}
-        <UserNav username={"USERNAME"} />
+        <UserNav username={user.name} imageURL={user.image} />
       </div>
       <div className="flex flex-col flex-grow">
         {/* Links */}
