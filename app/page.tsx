@@ -1,23 +1,16 @@
-"use client";
-import { useRouter } from "next/navigation";
-import Navbar from "./components/Navbar";
-import { useEffect, useState } from "react";
-import { useUserContext } from "./context/userContext";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
   // const { userId, setUserId, courseList, setCourseList } = useUserContext();
   //this will be sent to navbar by using useContext
 
-  const router = useRouter();
-
-  useEffect(() => {
-    // user is not logged in
-    router.push("/login");
-  }, [router]);
-
-  return (
-    <div className="flex">
-      <button>Home</button>
-    </div>
-  );
+  const session = await auth();
+  if (!session) {
+    redirect("/api/auth/signin?callbackUrl=/dashboard");
+    return null;
+  } else {
+    console.log(JSON.stringify(session, null, 2));
+    redirect("/dashboard");
+  }
 }
