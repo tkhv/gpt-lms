@@ -12,3 +12,10 @@ export type File = {
 };
 
 export type FilesList = File[];
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  image: string;
+};
