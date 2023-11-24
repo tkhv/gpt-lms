@@ -15,11 +15,18 @@ export type File = {
 
 export type FilesList = File[];
 
-export type Quiz = {
+export type QuizQuestion = {
   questionNum: number;
   questionType: "MCQ" | "FRQ";
   question: string;
   options: string[];
-  answer: number;
+  answer: number | string;
   points: number;
+};
+
+export type Quiz = {
+  name: string;
+  questions: QuizQuestion[];
+  totalPoints: number;
+  submissions: Record<string, number>; // key: username, value: score
 };

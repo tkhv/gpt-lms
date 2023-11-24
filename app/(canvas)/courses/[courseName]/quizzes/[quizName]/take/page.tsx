@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useState } from "react";
-import { Quiz } from "@/lib/types";
+import { QuizQuestion } from "@/lib/types";
 
 export default function QuizTake({
   params,
 }: {
   params: { courseName: string; quizName: string };
 }) {
-  const [questions, setQustions] = useState<Quiz[]>([
+  const [questions, setQustions] = useState<QuizQuestion[]>([
     {
       questionNum: 1,
       questionType: "MCQ",
@@ -87,7 +87,9 @@ export default function QuizTake({
                   q.options.map((option) => (
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value={option} id={option} />
-                      <Label htmlFor="option">{option}</Label>
+                      <Label htmlFor="option" key={option}>
+                        {option}
+                      </Label>
                     </div>
                   ))
                 ) : (

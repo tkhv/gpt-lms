@@ -9,14 +9,15 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useState } from "react";
-import { Quiz } from "@/lib/types";
+import { Quiz, QuizQuestion } from "@/lib/types";
+import QuizEditor from "@/app/components/QuizEditor";
 
 export default function QuizEdit({
   params,
 }: {
   params: { courseName: string; quizName: string };
 }) {
-  const [questions, setQuestions] = useState<Quiz[]>([
+  const [questions, setQuestions] = useState<QuizQuestion[]>([
     {
       questionNum: 1,
       questionType: "MCQ",
@@ -59,34 +60,6 @@ export default function QuizEdit({
     },
   ]);
 
-  const handleQuestionChange = (index: number, newText: string) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].question = newText;
-    setQuestions(updatedQuestions);
-  };
-
-  const handleOptionChange = (
-    questionIndex: number,
-    optionIndex: number,
-    newOptionText: string
-  ) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].options[optionIndex] = newOptionText;
-    setQuestions(updatedQuestions);
-  };
-
-  const addOption = (questionIndex: number) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].options.push("");
-    setQuestions(updatedQuestions);
-  };
-
-  const deleteOption = (questionIndex: number, optionIndex: number) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].options.splice(optionIndex, 1);
-    setQuestions(updatedQuestions);
-  };
-
   const handleSubmit = () => {
     /*
     1. Need a popup to make sure the Ta finished editing.
@@ -105,48 +78,7 @@ export default function QuizEdit({
         </div>
       </div>
       {/*need to be able to edit Instuction here */}
-      <ScrollArea className="h-[600px] w-[800px] rounded-md border p-4">
-        <div>
-          {questions.map((q, qIndex) => (
-            <div className="flex flex-col rounded-md border m-5 p-4 ">
-              {q.questionNum}.
-              <Input
-                value={q.question}
-                onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                placeholder="Type your question here."
-              />
-              {q.questionType == "MCQ" && (
-                <>
-                  {q.options.map((option, oIndex) => (
-                    <div className="flex items-center space-x-2 p-2">
-                      <Input
-                        value={option}
-                        onChange={(e) =>
-                          handleOptionChange(qIndex, oIndex, e.target.value)
-                        }
-                      />
-                      <Button
-                        className="w-8 h-8 p-2"
-                        onClick={() => deleteOption(qIndex, oIndex)}
-                      >
-                        -
-                      </Button>
-                    </div>
-                  ))}
-                  <div className="flex justify-center">
-                    <Button
-                      className="w-8 h-8"
-                      onClick={() => addOption(qIndex)}
-                    >
-                      +
-                    </Button>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+      <QuizEditor questions={questions} setQuestions={setQuestions} />
       <Button onClick={handleSubmit}>submit</Button>
     </div>
   );
