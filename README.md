@@ -4,7 +4,7 @@
 
 Microsoft AI Classroom Hackathon 2023 Submission
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) 14.0.3 project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It uses the Pages router to maintain compatability with Azure Static Web Apps as of November 2023.
 
 ## Installation
 
@@ -23,7 +23,7 @@ AZURE_COSMOSDB_PG_USER=""
 AZURE_COSMOSDB_PG_PASSWORD=""
 AZURE_COSMOSDB_PG_DBNAME=""
 
-AUTH_SECRET="" # Randomly generated string with `openssl rand -base64 32`
+NEXTAUTH_SECRET="" # Randomly generated string with `openssl rand -base64 32`
 NEXTAUTH_URL="http://localhost:3000"
 GITHUB_ID=""
 GITHUB_SECRET=""
@@ -37,5 +37,3 @@ npm run dev
 ```
 
 The page opens on [http://localhost:3000](http://localhost:3000).
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.

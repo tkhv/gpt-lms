@@ -8,7 +8,6 @@ type File = {
   name: string;
   url: string;
 };
-type FilesList = File[];
 
 /* This GET endpoint is called by the client to create a container for a course.
     A 200 response is returned if the container is created successfully. 
