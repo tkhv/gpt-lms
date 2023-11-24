@@ -1,5 +1,7 @@
 # GPT-LMS
 
+[![Azure Static Web Apps CI/CD](https://github.com/tkhv/gpt-lms/actions/workflows/azure-static-web-apps-icy-plant-0291c0a0f.yml/badge.svg?branch=prod)](https://github.com/tkhv/gpt-lms/actions/workflows/azure-static-web-apps-icy-plant-0291c0a0f.yml)
+
 Microsoft AI Classroom Hackathon 2023 Submission
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
