@@ -24,7 +24,6 @@ const options = {
       clientSecret: process.env.GITHUB_SECRET || "NOT_SET",
     }),
   ],
-  debug: false,
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>

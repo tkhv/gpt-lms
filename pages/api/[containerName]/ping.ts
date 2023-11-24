@@ -7,5 +7,9 @@ type Data = {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { containerName } = req.query;
-  res.status(200).json({ courseName: containerName });
+  const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+  const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
+  res
+    .status(200)
+    .json({ courseName: containerName, NEXTAUTH_URL, NEXTAUTH_SECRET });
 }
