@@ -1,4 +1,3 @@
-"use client";
 import { File, FilesList } from "@/lib/types";
 
 import {

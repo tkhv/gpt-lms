@@ -63,7 +63,7 @@ export function AddCourseDialog() {
       <DialogHeader>
         <DialogTitle>Create new course</DialogTitle>
         <DialogDescription>
-          Add course details and save when you're done.
+          Add course details and save when you&apos;re done.
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>

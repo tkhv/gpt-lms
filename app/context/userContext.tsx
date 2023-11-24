@@ -23,7 +23,13 @@ const UserContext = createContext<userData>({
   setCourseList: (): string[] => [],
 });
 
-export const UserContextProvider = ({ children }) => {
+import React from "react";
+
+export const UserContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [userId, setUserId] = useState("");
   const [courseList, setCourseList] = useState<string[]>([]);
 
