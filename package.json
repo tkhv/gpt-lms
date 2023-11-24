@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": "18.17.0"
+    "node": "18.17.1"
   },
   "dependencies": {
     "@auth/pg-adapter": "^0.2.6",
