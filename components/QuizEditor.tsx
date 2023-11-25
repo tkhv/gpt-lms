@@ -130,23 +130,23 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
                 value={q.question}
                 onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
                 placeholder="Type your question here."
-                key={q.questionNum}
               />
               {q.questionType == "MCQ" && (
                 <>
                   {q.options.map((option, oIndex) => (
-                    <div className="flex items-center space-x-2 p-2">
+                    <div
+                      className="flex items-center space-x-2 p-2"
+                      key={`option-${q.questionNum}-${oIndex}`}
+                    >
                       <Input
                         value={option}
                         onChange={(e) =>
                           handleOptionChange(qIndex, oIndex, e.target.value)
                         }
-                        key={`option${oIndex}`}
                       />
                       <Button
                         className="w-8 h-8 p-2"
                         onClick={() => deleteOption(qIndex, oIndex)}
-                        key={`delete_option${oIndex}`}
                       >
                         -
                       </Button>

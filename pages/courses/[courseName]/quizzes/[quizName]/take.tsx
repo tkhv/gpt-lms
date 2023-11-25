@@ -77,18 +77,19 @@ export default function QuizTake() {
       <ScrollArea className="h-[600px] w-[800px] rounded-md border p-4">
         <div>
           {questions.map((q) => (
-            <div className="flex flex-col rounded-md border m-5 p-4 ">
+            <div
+              className="flex flex-col rounded-md border m-5 p-4 "
+              key={q.questionNum}
+            >
               <div className="text-l pb-4">
                 {q.questionNum}.{q.question}
               </div>
               <RadioGroup defaultValue={q.question}>
                 {q.questionType == "MCQ" && q.options ? (
                   q.options.map((option) => (
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={option} id={option} />
-                      <Label htmlFor="option" key={option}>
-                        {option}
-                      </Label>
+                    <div className="flex items-center space-x-2" key={option}>
+                      <RadioGroupItem value={option} />
+                      <Label htmlFor="option">{option}</Label>
                     </div>
                   ))
                 ) : (
