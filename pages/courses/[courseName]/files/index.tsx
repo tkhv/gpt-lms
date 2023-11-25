@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { useRouter } from "next/router";
 
-async function getFilesList(courseName: string) {
+async function getFilesList(courseName: string | string[] | undefined) {
   let res = await fetch(
     "http://localhost:3000/api/" + courseName + "/listFiles",
     {

@@ -8,7 +8,6 @@ import {
   useUserTypeContext,
 } from "@/context/userTypeContext";
 import { CourseList, User } from "@/lib/types";
-import { auth } from "@/auth";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/Sidebar";
 
