@@ -60,14 +60,6 @@ export default function QuizEdit({
     },
   ]);
 
-  const handleSubmit = () => {
-    /*
-    1. Need a popup to make sure the Ta finished editing.
-    2. update the quesitons
-    3. back to the previous page
-    */
-  };
-
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
@@ -79,7 +71,6 @@ export default function QuizEdit({
       </div>
       {/*need to be able to edit Instuction here */}
       <QuizEditor questions={questions} setQuestions={setQuestions} />
-      <Button onClick={handleSubmit}>submit</Button>
     </div>
   );
 }

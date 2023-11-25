@@ -5,7 +5,7 @@ import Sidebar from "@/app/components/Sidebar";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-export default function CanvasLayout({
+export default function CoursesLayout({
   children,
 }: {
   children: React.ReactNode;
