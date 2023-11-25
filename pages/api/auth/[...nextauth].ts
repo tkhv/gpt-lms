@@ -16,7 +16,7 @@ const pool = new Pool({
   ssl: true,
 });
 
-const options = {
+export const options = {
   adapter: PostgresAdapter(pool),
   providers: [
     GithubProvider({
@@ -24,6 +24,14 @@ const options = {
       clientSecret: process.env.GITHUB_SECRET || "NOT_SET",
     }),
   ],
+  callbacks: {
+    session: async ({ session, user }: { session: any; user: any }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
