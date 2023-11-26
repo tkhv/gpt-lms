@@ -9,8 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-async function getFilesList(courseName: string | string[] | undefined) {
+async function getFilesList(courseName: string) {
   let res = await fetch(
     "http://localhost:3000/api/" + courseName + "/listFiles",
     {
@@ -26,10 +27,17 @@ async function getFilesList(courseName: string | string[] | undefined) {
 }
 
 export default async function Files() {
+  const [filesList, setFilesList] = useState<FilesList | null>(null);
   const router = useRouter();
   const { courseName } = router.query;
 
-  const filesList: FilesList = await getFilesList(courseName);
+  useEffect(() => {
+    if (typeof courseName === "string") {
+      getFilesList(courseName)
+        .then(setFilesList)
+        .catch((error) => console.error(error));
+    }
+  }, [courseName]);
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
@@ -60,3 +68,6 @@ export default async function Files() {
     </div>
   );
 }
+// export default function Files() {
+//   return <div>files</div>;
+// }

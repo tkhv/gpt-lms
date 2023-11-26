@@ -11,7 +11,8 @@ export default function Quiz() {
   const router = useRouter();
   const { quizName } = router.query;
 
-  const pathName = usePathname();
+  const pathName = router.asPath;
+  console.log(pathName);
   const { isTA } = useUserTypeContext();
 
   return (

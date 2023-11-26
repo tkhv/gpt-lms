@@ -12,13 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useUserTypeContext } from "@/context/userTypeContext";
 import { useRouter } from "next/router";
 
 export default function Quizzes() {
   const router = useRouter();
   const { courseName } = router.query;
+  console.log("courseName" + courseName);
+  const currentPath = router.pathname;
   // List of the quizzes' file names.
   const [quizList, setQuizList] = useState([
     "Quiz_0",
@@ -29,8 +30,6 @@ export default function Quizzes() {
   ]);
 
   const { isTA, setIsTA } = useUserTypeContext();
-
-  const pathName = usePathname();
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -53,8 +52,10 @@ export default function Quizzes() {
             ? quizList.map((quizName: string) => (
                 <TableRow key={quizName}>
                   <TableCell>
-                    {" "}
-                    <Link href={`${pathName}/${quizName}`} className="flex  ">
+                    <Link
+                      href={`${currentPath}/${quizName}`}
+                      className="flex  "
+                    >
                       <span>{quizName}</span>
                     </Link>
                   </TableCell>
@@ -65,7 +66,7 @@ export default function Quizzes() {
             <TableCell>
               {isTA && (
                 <Button>
-                  <Link href={`${pathName}/create`} className="flex  ">
+                  <Link href={`${currentPath}/create`} className="flex  ">
                     <span>create</span>
                   </Link>
                 </Button>

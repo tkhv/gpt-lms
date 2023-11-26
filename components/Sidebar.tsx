@@ -13,18 +13,27 @@ const Sidebar: FC = () => {
     "Modules",
     "Files",
   ]);
-  const originPath = `/courses/${currentCourse}`;
-  const pathName = useRouter();
+  const router = useRouter();
 
   const isActive = (it: string) => {
     // If the item is 'Home', check against the base path ('/')
-    const paramList = pathName.asPath.split("/");
+    const paramList = router.asPath.split("/");
     if (it === "Home") {
-      return paramList.length === 3;
+      return paramList.length === 2;
     }
     // Otherwise, compare against the lowercased item
-    return paramList[3] === it.toLocaleLowerCase();
+    return paramList[2] === it.toLocaleLowerCase();
   };
+  useEffect(() => {
+    // If currentCourse is not set, redirect to the home page
+    if (!currentCourse) {
+      router.push("/");
+    }
+  }, [currentCourse, router]);
+
+  if (!currentCourse) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <nav className="flex flex-col bg-sidebarColor text-white h-screen pl-3 pr-2">
@@ -32,7 +41,7 @@ const Sidebar: FC = () => {
         {/* Links */}
         {tabList.map((it) => (
           <Link
-            href={`${originPath}${
+            href={`/${currentCourse}${
               it !== "Home" ? `/${it.toLocaleLowerCase()}` : ""
             }`}
             className={`p-4 block group border-l-4  ${

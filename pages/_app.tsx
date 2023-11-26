@@ -10,6 +10,7 @@ import {
 import { CourseList, User } from "@/lib/types";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/Sidebar";
+import { UserContextProvider } from "@/context/userContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   // const session = await auth(); // This is from next-auth after OAuth login
@@ -36,18 +37,20 @@ export default function App({ Component, pageProps }: AppProps) {
   ];
   const { isTA, setIsTA } = useUserTypeContext();
 
-  const showSidebar = router.pathname.startsWith("/courses");
+  const showSidebar = !router.pathname.startsWith("/dashboard");
   return (
-    <UserTypeContextProvider>
-      <CourseContextProvider>
-        <SessionProvider session={pageProps.session}>
-          <div className="flex">
-            <Navbar courseList={courseList} />
-            {showSidebar && <Sidebar />}
-            <Component {...pageProps} />
-          </div>
-        </SessionProvider>
-      </CourseContextProvider>
-    </UserTypeContextProvider>
+    <UserContextProvider>
+      <UserTypeContextProvider>
+        <CourseContextProvider>
+          <SessionProvider session={pageProps.session}>
+            <div className="flex">
+              <Navbar courseList={courseList} />
+              {showSidebar && <Sidebar />}
+              <Component {...pageProps} />
+            </div>
+          </SessionProvider>
+        </CourseContextProvider>
+      </UserTypeContextProvider>
+    </UserContextProvider>
   );
 }

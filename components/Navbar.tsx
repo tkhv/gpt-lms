@@ -20,7 +20,7 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
   const isActive = (route: string) => {
     const pathList = pathName.asPath.split("/");
     /*pathList = ["", dashboard] or ["", courses, [courseName], ...]*/
-    return pathList.length > 2 ? route === pathList[2] : route === pathList[1];
+    return route === pathList[1];
   };
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
@@ -41,7 +41,7 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
         {courseList.map((course: Course) => (
           <Link
             key={course.id}
-            href={`/courses/${course.name}`}
+            href={`/${course.name || currentCourse}`}
             className={`p-4 block ${
               isActive(`${course.name}`)
                 ? "bg-sidebarColor"

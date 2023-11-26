@@ -23,8 +23,6 @@ const UserContext = createContext<userData>({
   setCourseList: (): string[] => [],
 });
 
-import React from "react";
-
 export const UserContextProvider = ({
   children,
 }: {
@@ -33,24 +31,24 @@ export const UserContextProvider = ({
   const [userId, setUserId] = useState("");
   const [courseList, setCourseList] = useState<string[]>([]);
 
-  useEffect(() => {
-    try {
-      const savedCourseList = localStorage.getItem("taking_courses");
-      if (savedCourseList) {
-        setCourseList(JSON.parse(savedCourseList));
-      }
-    } catch (error) {
-      console.error("Failed to parse courses from localStorage:", error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const savedCourseList = localStorage.getItem("taking_courses");
+  //     if (savedCourseList) {
+  //       setCourseList(JSON.parse(savedCourseList));
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to parse courses from localStorage:", error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("taking_courses", JSON.stringify(courseList));
-    } catch (error) {
-      console.error("Failed to save courses to localStorage:", error);
-    }
-  }, [courseList]);
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem("taking_courses", JSON.stringify(courseList));
+  //   } catch (error) {
+  //     console.error("Failed to save courses to localStorage:", error);
+  //   }
+  // }, [courseList]);
   return (
     <UserContext.Provider
       value={{ userId, setUserId, courseList, setCourseList }}
