@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import PostgresAdapter from "@auth/pg-adapter";
-import pool from "@/data/dbPool";
+import pool from "@/dbUtils/dbPool";
 
 export const options = {
   adapter: PostgresAdapter(pool), // Use CosmosDB PG for session storage

@@ -5,7 +5,7 @@ import { options } from "../auth/[...nextauth]";
 const { DefaultAzureCredential } = require("@azure/identity");
 const { ContainerClient } = require("@azure/storage-blob");
 
-import pool from "@/data/dbPool";
+import pool from "@/dbUtils/dbPool";
 
 /* This GET endpoint is called by the client to create a container for a course.
     A 200 response is returned if the container is created successfully. 

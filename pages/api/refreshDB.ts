@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { refreshDBQuery } from "@/data/pgQueries";
-import pool from "@/data/dbPool";
+import { refreshDBQuery } from "@/dbUtils/pgQueries";
+import pool from "@/dbUtils/dbPool";
 
 async function refreshDB() {
   try {
