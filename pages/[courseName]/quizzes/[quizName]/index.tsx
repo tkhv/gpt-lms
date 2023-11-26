@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { useUserTypeContext } from "@/context/userTypeContext";
