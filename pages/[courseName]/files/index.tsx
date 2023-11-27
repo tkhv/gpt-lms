@@ -13,7 +13,7 @@ type CourseProps = {
 
 async function getFilesList(courseName: string) {
   let res = await fetch(
-    "http://localhost:3000/api/" + courseName + "/listFiles",
+    process.env.NEXTAUTH_URL + "api/" + courseName + "/listFiles",
     {
       method: "GET",
     }
