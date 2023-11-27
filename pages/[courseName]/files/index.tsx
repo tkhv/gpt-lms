@@ -12,12 +12,10 @@ type CourseProps = {
 };
 
 async function getFilesList(courseName: string) {
-  let res = await fetch(
-    process.env.NEXTAUTH_URL + "api/" + courseName + "/listFiles",
-    {
-      method: "GET",
-    }
-  );
+  const baseUrl = window.location.protocol + "//" + window.location.host;
+  let res = await fetch(baseUrl + "/api/" + courseName + "/listFiles", {
+    method: "GET",
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
