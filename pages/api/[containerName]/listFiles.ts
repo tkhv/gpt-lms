@@ -34,5 +34,5 @@ export default async function GET(
     });
   }
 
-  res.status(200).json({ files });
+  res.status(200).json(files);
 }
