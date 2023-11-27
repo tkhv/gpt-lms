@@ -2,28 +2,24 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import PostgresAdapter from "@auth/pg-adapter";
-const { Pool } = require("pg");
+import pool from "@/dbUtils/dbPool";
 
-// Store user accounts in CosmosDB Postgres as well
-const pool = new Pool({
-  max: 300,
-  connectionTimeoutMillis: 5000,
-  host: process.env.AZURE_COSMOSDB_PG_URL,
-  port: 5432,
-  user: process.env.AZURE_COSMOSDB_PG_USER,
-  password: process.env.AZURE_COSMOSDB_PG_PASSWORD,
-  database: process.env.AZURE_COSMOSDB_PG_DBNAME,
-  ssl: true,
-});
-
-const options = {
-  adapter: PostgresAdapter(pool),
+export const options = {
+  adapter: PostgresAdapter(pool), // Use CosmosDB PG for session storage
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || "NOT_SET",
       clientSecret: process.env.GITHUB_SECRET || "NOT_SET",
     }),
   ],
+  callbacks: {
+    session: async ({ session, user }: { session: any; user: any }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
