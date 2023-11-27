@@ -1,5 +1,13 @@
 import type { GetStaticProps, GetStaticPaths } from "next";
 import { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { FilesList } from "../../../lib/types";
 
@@ -33,17 +41,38 @@ export default function Files({ courseName }: CourseProps) {
   }, [courseName]);
 
   return (
-    <div>
-      <p>FILES: {courseName}</p>
-      {filesList.length ? (
-        filesList.map((file, index) => (
-          <div key={index}>
-            <p>{file.name}</p>
-          </div>
-        ))
-      ) : (
-        <p>NO FILES</p>
-      )}
+    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+      <div className="flex items-center justify-between space-y-2">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {courseName} Files
+          </h2>
+        </div>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">File Name</TableHead>
+            <TableHead className="text-right"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filesList.length ? (
+            filesList.map((file, index) => (
+              <TableRow key={index}>
+                <TableCell>{file.name}</TableCell>
+                <TableCell>delete btn here</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell>No files found</TableCell>
+            </TableRow>
+            // Note: Hydration errors will occur at runtime if
+            // we return something other than a TableRow here.
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
