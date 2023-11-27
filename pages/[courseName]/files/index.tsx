@@ -1,11 +1,7 @@
 import type { GetStaticProps, GetStaticPaths } from "next";
 import { useEffect, useState } from "react";
-type File = {
-  type: "quiz" | "assignment" | "lesson";
-  name: string;
-  url: string;
-};
-type FilesList = File[];
+
+import { FilesList } from "../../../lib/types";
 
 type CourseProps = {
   courseName: string;
