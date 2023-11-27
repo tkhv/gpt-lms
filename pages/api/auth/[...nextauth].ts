@@ -22,5 +22,7 @@ export const options = {
   },
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) =>
+const authHandler = (req: NextApiRequest, res: NextApiResponse) =>
   NextAuth(req, res, options);
+
+export default authHandler;
