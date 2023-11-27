@@ -35,3 +35,4 @@ export type Quiz = {
   totalPoints: number;
   submissions: Record<string, number>; // key: username, value: score
 };
+

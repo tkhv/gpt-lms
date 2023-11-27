@@ -3,12 +3,7 @@ const { NextApiRequest, NextApiResponse } = require("next/server");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { ContainerClient } = require("@azure/storage-blob");
 
-type File = {
-  type: "quiz" | "assignment" | "lesson";
-  name: string;
-  url: string;
-};
-type FilesList = File[];
+import { FilesList } from "../../../lib/types";
 
 /* This GET endpoint is called by the client to list all files in a specified container.
     A FilesList is returned. */
@@ -34,5 +29,5 @@ export default async function GET(
     });
   }
 
-  res.status(200).json({ files });
+  res.status(200).json(files);
 }

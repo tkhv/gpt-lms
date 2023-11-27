@@ -5,6 +5,6 @@ export default function () {
   if (!session) {
     return <main>NOT LOGGED IN. (We must redirect to /api/auth/signin.)</main>;
   } else {
-    return <main>Hello</main>;
+    return <main>Hello {session.user.name}!</main>;
   }
 }
