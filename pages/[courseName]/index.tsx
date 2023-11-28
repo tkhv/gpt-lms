@@ -1,3 +1,5 @@
+import Layout from "@/components/Layout";
+import Sidebar from "@/components/Sidebar";
 import type { GetStaticProps, GetStaticPaths } from "next";
 
 type CourseProps = {
@@ -44,4 +46,8 @@ export const getStaticProps: GetStaticProps<CourseProps> = async ({
 
   const courseName = params.courseName;
   return { props: { courseName } };
+};
+
+Course.getLayout = function (page: React.ReactNode) {
+  return <Layout>{page}</Layout>;
 };
