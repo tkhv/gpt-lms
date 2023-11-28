@@ -43,9 +43,9 @@ export default function App({ Component, pageProps }: Props) {
   //   image: session.user.image || "",
   // };
 
+  // nested layout
   // const getLayout = Component.getLayout ?? ((page: React.ReactNode) => page);
 
-  // const [showSidebar, setShowSidebar] = useState(false);
   const showSidebar = Component.showSidebar ?? true;
 
   const router = useRouter();
@@ -57,23 +57,16 @@ export default function App({ Component, pageProps }: Props) {
   ];
   const { isTA, setIsTA } = useUserTypeContext();
 
-  // useEffect(() => {
-  //   setShowSidebar(!router.pathname.startsWith("/dashboard"));
-  // }, []);
-
-  // const showSidebar = !router.pathname.startsWith("/dashboard");
   return (
     <UserContextProvider>
       <UserTypeContextProvider>
-        <CourseContextProvider>
-          <SessionProvider session={pageProps.session}>
-            <div className="flex">
-              <Navbar courseList={courseList} />
-              {showSidebar && <Sidebar />}
-              <Component {...pageProps} />
-            </div>
-          </SessionProvider>
-        </CourseContextProvider>
+        <SessionProvider session={pageProps.session}>
+          <div className="flex">
+            <Navbar courseList={courseList} />
+            {showSidebar && <Sidebar />}
+            <Component {...pageProps} />
+          </div>
+        </SessionProvider>
       </UserTypeContextProvider>
     </UserContextProvider>
   );

@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { FC } from "react";
-import { useCourseContext } from "../context/courseContext";
 import { Course, CourseList, User } from "@/lib/types";
 
 import { UserNav } from "./user-nav";
@@ -13,7 +12,8 @@ type NavbarProps = {
 };
 
 const Navbar: FC<NavbarProps> = ({ courseList }) => {
-  const { currentCourse, setCurrentCourse } = useCourseContext();
+  const router = useRouter();
+  const { courseName } = router.query;
 
   const pathName = useRouter();
 
@@ -34,20 +34,18 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
           className={`p-4 block ${
             isActive("dashboard") ? "bg-sidebarColor" : "hover:bg-sidebarColor"
           }`}
-          onClick={() => setCurrentCourse("")}
         >
           Dashboard
         </Link>
         {courseList.map((course: Course) => (
           <Link
             key={course.id}
-            href={`/${course.name || currentCourse}`}
+            href={`/${course.name || courseName}`}
             className={`p-4 block ${
               isActive(`${course.name}`)
                 ? "bg-sidebarColor"
                 : "hover:bg-sidebarColor"
             }`}
-            onClick={() => setCurrentCourse(course.name)}
           >
             {course.name}
           </Link>

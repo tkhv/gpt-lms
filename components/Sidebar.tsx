@@ -5,7 +5,6 @@ import { useCourseContext } from "../context/courseContext";
 import { useRouter } from "next/router";
 
 const Sidebar: FC = () => {
-  const { currentCourse, setCurrentCourse } = useCourseContext();
   const [tabList, setTableList] = useState([
     "Home",
     "Assignments",
@@ -14,7 +13,7 @@ const Sidebar: FC = () => {
     "Files",
   ]);
   const router = useRouter();
-
+  const { courseName } = router.query;
   const isActive = (it: string) => {
     // If the item is 'Home', check against the base path ('/')
     const paramList = router.asPath.split("/");
@@ -24,25 +23,15 @@ const Sidebar: FC = () => {
     // Otherwise, compare against the lowercased item
     return paramList[2] === it.toLocaleLowerCase();
   };
-  // useEffect(() => {
-  //   // If currentCourse is not set, redirect to the home page
-  //   if (!currentCourse) {
-  //     router.push("/");
-  //   }
-  // }, [currentCourse, router]);
-
-  // if (!currentCourse) {
-  //   return <div>Loading...</div>;
-  // }
 
   return (
     <nav className="flex flex-col bg-sidebarColor text-white h-screen pl-3 pr-2">
       <div className="flex flex-col flex-grow">
         {/* Links */}
-        {currentCourse &&
+        {courseName &&
           tabList.map((it) => (
             <Link
-              href={`/${currentCourse}${
+              href={`/${courseName}${
                 it !== "Home" ? `/${it.toLocaleLowerCase()}` : ""
               }`}
               className={`p-4 block group border-l-4  ${

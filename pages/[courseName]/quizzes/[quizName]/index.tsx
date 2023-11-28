@@ -11,8 +11,16 @@ export default function Quiz() {
   const { quizName } = router.query;
 
   const pathName = router.asPath;
-  console.log(pathName);
+
   const { isTA } = useUserTypeContext();
+
+  const handleButtonClick = () => {
+    if (isTA) {
+      router.push(`${pathName}/edit`);
+    } else {
+      router.push(`${pathName}/take`);
+    }
+  };
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -25,12 +33,8 @@ export default function Quiz() {
         </div>
       </div>
       <div>
-        <Button>
-          {isTA ? (
-            <Link href={`${pathName}/edit`}>edit</Link>
-          ) : (
-            <Link href={`${pathName}/take`}>take</Link>
-          )}
+        <Button onClick={handleButtonClick}>
+          {isTA ? <span>edit</span> : <span>take</span>}
         </Button>
       </div>
     </div>

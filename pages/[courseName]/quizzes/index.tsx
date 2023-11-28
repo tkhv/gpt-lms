@@ -18,8 +18,8 @@ import { useRouter } from "next/router";
 export default function Quizzes() {
   const router = useRouter();
   const { courseName } = router.query;
-  console.log("courseName" + courseName);
-  const currentPath = router.pathname;
+
+  const currentPath = router.asPath;
   // List of the quizzes' file names.
   const [quizList, setQuizList] = useState([
     "Quiz_0",
@@ -65,10 +65,8 @@ export default function Quizzes() {
           <TableRow key={"create"}>
             <TableCell>
               {isTA && (
-                <Button>
-                  <Link href={`${currentPath}/create`} className="flex  ">
-                    <span>create</span>
-                  </Link>
+                <Button onClick={() => router.push(`${currentPath}/create`)}>
+                  <span>create</span>
                 </Button>
               )}
             </TableCell>
