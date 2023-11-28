@@ -1,5 +1,5 @@
-import Layout from "@/components/Layout";
-import Sidebar from "@/components/Sidebar";
+import SidebarLayout from "@/components/SidebarLayout";
+// import Sidebar from "@/components/Sidebar";
 import type { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/router";
 
@@ -53,5 +53,5 @@ those. */
 // };
 
 // Course.getLayout = function (page: React.ReactNode) {
-//   return <Layout>{page}</Layout>;
+//   return <SidebarLayout>{page}</SidebarLayout>;
 // };
