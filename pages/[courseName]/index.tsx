@@ -48,6 +48,6 @@ export const getStaticProps: GetStaticProps<CourseProps> = async ({
   return { props: { courseName } };
 };
 
-Course.getLayout = function (page: React.ReactNode) {
-  return <Layout>{page}</Layout>;
-};
+// Course.getLayout = function (page: React.ReactNode) {
+//   return <Layout>{page}</Layout>;
+// };

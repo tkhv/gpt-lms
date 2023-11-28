@@ -19,7 +19,7 @@ import { Layout } from "lucide-react";
 type GetLayout = (page: React.ReactNode) => React.ReactNode;
 
 type Page<P = {}> = NextPage<P> & {
-  getLayout?: (page: React.ReactNode) => React.ReactNode;
+  // getLayout?: (page: React.ReactNode) => React.ReactNode;
   showSidebar: boolean;
 };
 
@@ -43,11 +43,7 @@ export default function App({ Component, pageProps }: Props) {
   //   image: session.user.image || "",
   // };
 
-  // const defaultGetLayout: GetLayout = (page: React.ReactNode) => (
-  //   <Layout>{page}</Layout>
-  // );
   // const getLayout = Component.getLayout ?? ((page: React.ReactNode) => page);
-  // const getLayout = Component.getLayout ?? defaultGetLayout;
 
   // const [showSidebar, setShowSidebar] = useState(false);
   const showSidebar = Component.showSidebar ?? true;
