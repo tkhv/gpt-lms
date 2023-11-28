@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 
 import { FilesList } from "../../../lib/types";
+import { useRouter } from "next/router";
 
 type CourseProps = {
   courseName: string;
@@ -27,20 +28,29 @@ async function getFilesList(courseName: string) {
 
   return await res.json();
 }
+
 // export default function Files({ courseName }: CourseProps) {
-//   return <div></div>
-// }
-export default function Files({ courseName }: CourseProps) {
+export default function Files() {
   const [filesList, setFilesList] = useState<FilesList>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const router = useRouter();
+  const { courseName } = router.query;
 
   useEffect(() => {
-    getFilesList(courseName)
-      .then((files) => {
-        console.log(files);
-        setFilesList(files);
-      })
-      .catch((err) => console.error(err));
+    if (typeof courseName === "string") {
+      getFilesList(courseName)
+        .then((files) => {
+          console.log(files);
+          setFilesList(files);
+          setIsLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
   }, [courseName]);
+
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">

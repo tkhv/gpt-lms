@@ -1,12 +1,16 @@
 import Layout from "@/components/Layout";
 import Sidebar from "@/components/Sidebar";
 import type { GetStaticProps, GetStaticPaths } from "next";
+import { useRouter } from "next/router";
 
 type CourseProps = {
   courseName: string;
 };
 
-export default function Course({ courseName }: CourseProps) {
+// export default function Course({ courseName }: CourseProps) {
+export default function Course() {
+  const router = useRouter();
+  const { courseName } = router.query;
   return <p>Name: {courseName}</p>;
 }
 
