@@ -27,8 +27,8 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
     questionType: "MCQ",
     question: "",
     options: ["", "", "", ""], // Assuming a default of 4 options
-    answer: 1, // Assuming no answer selected by default
-    points: 10, // Default points value
+    answer: 0, // Assuming no answer selected by default
+    points: 0, // Default points value
   };
 
   const defaultFRQQuestion: QuizQuestion = {
@@ -37,7 +37,7 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
     question: "",
     options: [],
     answer: "",
-    points: 80, // Default points value for FRQ
+    points: 0, // Default points value for FRQ
   };
 
   // Function to add a new MCQ question
@@ -60,10 +60,6 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
     );
   };
 
-  const deleteQuestion = (questionNum: number) => {
-    setQuestions(questions.filter((q) => q.questionNum !== questionNum));
-  };
-
   // Function to handle reordering the question numbers after deletion
   const reorderQuestions = (questions: QuizQuestion[]) => {
     return questions.map((q, index) => ({
@@ -83,6 +79,18 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
   const handleQuestionChange = (index: number, newText: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].question = newText;
+    setQuestions(updatedQuestions);
+  };
+
+  const handlePointsChange = (index: number, newPoints: string) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index].points = parseInt(newPoints, 10) || 0;
+    setQuestions(updatedQuestions);
+  };
+
+  const handleAnswerChange = (index: number, newAnswer: string) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index].answer = newAnswer;
     setQuestions(updatedQuestions);
   };
 
@@ -111,9 +119,10 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
   const handleSubmit = () => {
     /*
     1. Need a popup to make sure the Ta finished editing.
-    2. update the quesitons
+    2. update the quesitons using api
     3. back to the previous page
     */
+    console.log(questions);
   };
 
   return (
@@ -125,21 +134,37 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
               className="flex flex-col rounded-md border m-5 p-4 "
               key={q.questionNum}
             >
-              {q.questionNum}.
-              <Input
-                value={q.question}
-                onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                placeholder="Type your question here."
-              />
-              {q.questionType == "MCQ" && (
-                <>
+              <div className="flex flex-row p-2 items-center gap-2">
+                {q.questionNum}.
+                <Input
+                  value={q.question}
+                  onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+                  placeholder="Type your question here."
+                />
+              </div>
+              <div className="flex flex-row p-2 items-center gap-2">
+                points:
+                <Input
+                  className="w-16 h-8 p-2"
+                  type="number"
+                  value={q.points}
+                  onChange={(e) => handlePointsChange(qIndex, e.target.value)}
+                  placeholder="0"
+                />
+              </div>
+
+              {q.questionType == "MCQ" && typeof q.answer === "number" ? (
+                <RadioGroup defaultValue={q.options[q.answer]}>
                   {q.options.map((option, oIndex) => (
                     <div
                       className="flex items-center space-x-2 p-2"
                       key={`option-${q.questionNum}-${oIndex}`}
                     >
+                      <RadioGroupItem value={option} />
+                      {/* <Label htmlFor="option">{option}</Label> */}
                       <Input
                         value={option}
+                        placeholder={`Option ${oIndex + 1}`}
                         onChange={(e) =>
                           handleOptionChange(qIndex, oIndex, e.target.value)
                         }
@@ -160,10 +185,17 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
                       +
                     </Button>
                   </div>
-                </>
+                </RadioGroup>
+              ) : (
+                <Textarea
+                  value={q.answer}
+                  onChange={(e) => handleAnswerChange(qIndex, e.target.value)}
+                  placeholder="Type the FRQ answer here."
+                />
               )}
+
               <Button
-                className="w-30 h-8 p-2"
+                className="w-20 h-8 p-2 m-2"
                 onClick={() => handleDeleteQuestion(q.questionNum)}
               >
                 Delete
@@ -171,8 +203,12 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
             </div>
           ))}
         </div>
-        <Button onClick={addMCQQuestion}>ADD MCQ</Button>
-        <Button onClick={addFRQQuestion}>ADD FRQ</Button>
+        <Button className="w-20 h-8 p-2 m-2" onClick={addMCQQuestion}>
+          ADD MCQ
+        </Button>
+        <Button className="w-20 h-8 p-2 m-2" onClick={addFRQQuestion}>
+          ADD FRQ
+        </Button>
       </ScrollArea>
       <Button onClick={handleSubmit}>submit</Button>
     </div>

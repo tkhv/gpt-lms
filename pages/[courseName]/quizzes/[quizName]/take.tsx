@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { QuizQuestion } from "@/lib/types";
 import { useRouter } from "next/router";
+import { string } from "zod";
 
 export default function QuizTake() {
   const router = useRouter();
@@ -57,12 +58,39 @@ export default function QuizTake() {
     },
   ]);
 
+  const [studentAnswers, setStudentAnswers] = useState(() => {
+    return questions.map((question) => ({
+      questionNum: question.questionNum,
+      answer: question.questionType === "MCQ" ? "" : 0, // Initialize MCQs with a string, FRQs with an array
+    }));
+  });
+
+  const handleAnswerChange = (questionNum: number, newAnswer: any) => {
+    const currentQ = questions[questionNum - 1];
+    if (currentQ.questionType === "MCQ") {
+      setStudentAnswers((prevAnswers) =>
+        prevAnswers.map((ans) =>
+          ans.questionNum === questionNum
+            ? { ...ans, answer: currentQ.options.indexOf(newAnswer) + 1 }
+            : ans
+        )
+      );
+    } else {
+      setStudentAnswers((prevAnswers) =>
+        prevAnswers.map((ans) =>
+          ans.questionNum === questionNum ? { ...ans, answer: newAnswer } : ans
+        )
+      );
+    }
+  };
+
   const handleSubmit = () => {
     /*
     1. Need a popup to make sure student finished.
     2. Calulate the score and update the takenUserList using the api
     3. back to the previous page
     */
+    console.log(studentAnswers);
   };
 
   return (
@@ -84,7 +112,10 @@ export default function QuizTake() {
               <div className="text-l pb-4">
                 {q.questionNum}.{q.question}
               </div>
-              <RadioGroup defaultValue={q.question}>
+              <RadioGroup
+                defaultValue={q.question}
+                onValueChange={(e) => handleAnswerChange(q.questionNum, e)}
+              >
                 {q.questionType == "MCQ" && q.options ? (
                   q.options.map((option) => (
                     <div className="flex items-center space-x-2" key={option}>
@@ -94,7 +125,12 @@ export default function QuizTake() {
                   ))
                 ) : (
                   <div>
-                    <Textarea placeholder="Type your answer here." />
+                    <Textarea
+                      placeholder="Type your answer here."
+                      onChange={(e) =>
+                        handleAnswerChange(q.questionNum, e.target.value)
+                      }
+                    />
                   </div>
                 )}
               </RadioGroup>

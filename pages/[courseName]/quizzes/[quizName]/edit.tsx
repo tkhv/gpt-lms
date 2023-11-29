@@ -38,7 +38,7 @@ export default function QuizEdit() {
       questionType: "FRQ",
       question: "string",
       options: [],
-      answer: 0,
+      answer: "this is the answer!",
       points: 80,
     },
     {
@@ -46,7 +46,7 @@ export default function QuizEdit() {
       questionType: "FRQ",
       question: "string",
       options: [],
-      answer: 0,
+      answer: "answer!",
       points: 80,
     },
   ]);
