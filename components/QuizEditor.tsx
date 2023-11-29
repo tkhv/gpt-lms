@@ -88,9 +88,15 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
     setQuestions(updatedQuestions);
   };
 
-  const handleAnswerChange = (index: number, newAnswer: string) => {
+  const handleAnswerChange = (
+    index: number,
+    newAnswer: string,
+    isMCQ: boolean
+  ) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index].answer = newAnswer;
+    updatedQuestions[index].answer = isMCQ
+      ? updatedQuestions[index].options.indexOf(newAnswer) + 1
+      : newAnswer;
     setQuestions(updatedQuestions);
   };
 
@@ -154,7 +160,10 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
               </div>
 
               {q.questionType == "MCQ" && typeof q.answer === "number" ? (
-                <RadioGroup defaultValue={q.options[q.answer]}>
+                <RadioGroup
+                  defaultValue={q.options[q.answer]}
+                  onValueChange={(e) => handleAnswerChange(qIndex, e, true)}
+                >
                   {q.options.map((option, oIndex) => (
                     <div
                       className="flex items-center space-x-2 p-2"
@@ -189,7 +198,9 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
               ) : (
                 <Textarea
                   value={q.answer}
-                  onChange={(e) => handleAnswerChange(qIndex, e.target.value)}
+                  onChange={(e) =>
+                    handleAnswerChange(qIndex, e.target.value, false)
+                  }
                   placeholder="Type the FRQ answer here."
                 />
               )}
