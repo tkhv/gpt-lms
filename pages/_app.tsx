@@ -11,8 +11,23 @@ import { CourseList, User } from "@/lib/types";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/Sidebar";
 import { UserContextProvider } from "@/context/userContext";
+import { useEffect, useState } from "react";
+import { NextPage } from "next";
+import NavbarLayout from "@/components/NavbarLayout";
+import { Layout } from "lucide-react";
 
-export default function App({ Component, pageProps }: AppProps) {
+type GetLayout = (page: React.ReactNode) => React.ReactNode;
+
+type Page<P = {}> = NextPage<P> & {
+  // getLayout?: (page: React.ReactNode) => React.ReactNode;
+  showSidebar: boolean;
+};
+
+type Props = AppProps & {
+  Component: Page;
+};
+
+export default function App({ Component, pageProps }: Props) {
   // const session = await auth(); // This is from next-auth after OAuth login
   // if (!session) {
   //   redirect("/api/auth/signin?callbackUrl=/dashboard");
@@ -28,6 +43,11 @@ export default function App({ Component, pageProps }: AppProps) {
   //   image: session.user.image || "",
   // };
 
+  // nested layout
+  // const getLayout = Component.getLayout ?? ((page: React.ReactNode) => page);
+
+  const showSidebar = Component.showSidebar ?? true;
+
   const router = useRouter();
 
   const courseList: CourseList = [
@@ -37,19 +57,16 @@ export default function App({ Component, pageProps }: AppProps) {
   ];
   const { isTA, setIsTA } = useUserTypeContext();
 
-  const showSidebar = !router.pathname.startsWith("/dashboard");
   return (
     <UserContextProvider>
       <UserTypeContextProvider>
-        <CourseContextProvider>
-          <SessionProvider session={pageProps.session}>
-            <div className="flex">
-              <Navbar courseList={courseList} />
-              {showSidebar && <Sidebar />}
-              <Component {...pageProps} />
-            </div>
-          </SessionProvider>
-        </CourseContextProvider>
+        <SessionProvider session={pageProps.session}>
+          <div className="flex">
+            <Navbar courseList={courseList} />
+            {showSidebar && <Sidebar />}
+            <Component {...pageProps} />
+          </div>
+        </SessionProvider>
       </UserTypeContextProvider>
     </UserContextProvider>
   );
