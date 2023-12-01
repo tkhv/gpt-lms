@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const Navbar = () => {
+export default function Navbar() {
   const router = useRouter();
   let { courseName, quizName } = router.query;
   courseName = courseName as string;
@@ -40,4 +40,4 @@ const Navbar = () => {
       </div>
     </div>
   );
-};
+}
