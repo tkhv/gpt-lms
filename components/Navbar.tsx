@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Course, CourseList, User } from "@/lib/types";
 
 import { UserNav } from "./user-nav";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 type NavbarProps = {
@@ -12,6 +13,9 @@ type NavbarProps = {
 };
 
 const Navbar: FC<NavbarProps> = ({ courseList }) => {
+  const { data: session } = useSession();
+  const username = session?.user.name;
+  const imageURL = session?.user.image;
   const router = useRouter();
   const { courseName } = router.query;
 
@@ -25,7 +29,7 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
       <div className="p-4 mb-2 mt-4 flex flex-col items-center">
-        {/* <UserNav username={user.name} imageURL={user.image} /> */}
+        <UserNav username={username || ""} imageURL={imageURL || ""} />
       </div>
       <div className="flex flex-col flex-grow">
         {/* Links */}
