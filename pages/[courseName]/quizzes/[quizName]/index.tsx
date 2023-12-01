@@ -2,17 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useUserTypeContext } from "@/context/userTypeContext";
 import { useRouter } from "next/router";
 
-export default function Quiz() {
+const Navbar = () => {
   const router = useRouter();
-  const { quizName } = router.query;
-
+  let { courseName, quizName } = router.query;
+  courseName = courseName as string;
   const pathName = router.asPath;
 
-  const { isTA } = useUserTypeContext();
+  const { data: session } = useSession();
+  const isTA = session?.user.isAdminFor.includes(courseName);
 
   const handleButtonClick = () => {
     if (isTA) {
@@ -39,4 +40,4 @@ export default function Quiz() {
       </div>
     </div>
   );
-}
+};

@@ -1,6 +1,4 @@
 "use client";
-import { File, FilesList } from "@/lib/types";
-
 import {
   Table,
   TableBody,
@@ -10,14 +8,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useUserTypeContext } from "@/context/userTypeContext";
 import { useRouter } from "next/router";
 
 export default function Quizzes() {
+  const [isTA, setIsTA] = useState(false);
   const router = useRouter();
-  const { courseName } = router.query;
+  let { courseName } = router.query;
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    courseName = courseName as string;
+    if (session?.user.isAdminFor.includes(courseName)) {
+      setIsTA(true);
+    }
+  });
 
   const currentPath = router.asPath;
   // List of the quizzes' file names.
@@ -28,8 +35,6 @@ export default function Quizzes() {
     "Quiz_3",
     "Quiz_4",
   ]);
-
-  const { isTA, setIsTA } = useUserTypeContext();
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
