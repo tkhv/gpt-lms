@@ -48,13 +48,6 @@ const Navbar = () => {
           </Link>
         ))}
       </div>
-      <div className="p-4">
-        {/* Exit or logout link */}
-        <Link href="/logout" className="hover:bg-gray-700 p-2 rounded-full">
-          {/* Replace with an appropriate icon */}
-          Exit
-        </Link>
-      </div>
     </nav>
   );
 };

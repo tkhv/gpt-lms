@@ -7,11 +7,11 @@ const { ContainerClient } = require("@azure/storage-blob");
 
 import pool from "@/dbUtils/dbPool";
 
-/* This GET endpoint is called by the client to create a container for a course.
+/* This POST endpoint is called by the client to create a container for a course.
     A 200 response is returned if the container is created successfully. 
     Else, a 500 response is returned. */
 
-export default async function GET(
+export default async function POST(
   req: typeof NextApiRequest,
   res: typeof NextApiResponse
 ) {
@@ -23,9 +23,12 @@ export default async function GET(
   let { containerName } = req.query; // containers cannot have uppercase or symbols
   containerName = containerName.toLowerCase();
 
+  // get TA emails from request body
+  const TAEmails: String[] = JSON.parse(req.body).map((TA: any) => TA.text);
+
   await initContainer(containerName);
   await initDefaultFiles(containerName); // temp data for testing
-  await initDatabase(containerName, email);
+  await initDatabase(containerName, email, TAEmails);
   res.status(200).json({ "data.containerName": containerName });
 }
 
@@ -45,12 +48,7 @@ async function initContainer(containerName: string) {
   return;
 }
 
-/* This function initializes the container with the following files in the specified paths:
-    - dashboard/readme.md
-    - quizzes/quiz1.json
-    - lessons/lesson1.pdf
-    - assignments/assignment1.json
-*/
+// This function initializes the container with dashboard/syllabus.md
 async function initDefaultFiles(containerName: string) {
   const containerClient = await new ContainerClient(
     process.env.AZURE_STORAGE_URL + `/${containerName}`,
@@ -58,31 +56,39 @@ async function initDefaultFiles(containerName: string) {
   );
 
   // !!! TEMPORARY DATA !!!
-  const content = "hello";
+  const content = "Hello! This is temp data from api/[containerName]/create.ts";
   const contentByteLength = Buffer.byteLength(content);
 
   // Initialize the container
-  for (const blobName of [
-    "dashboard/readme.md",
-    "quizzes/quiz1.json",
-    "lessons/lesson1.pdf",
-    "assignments/assignment1.json",
-  ]) {
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-    const { requestId } = await blockBlobClient.upload(
-      content,
-      contentByteLength
-    );
-  }
+  const blockBlobClient = containerClient.getBlockBlobClient(
+    "dashboard/syllabus.md"
+  );
+  const { requestId } = await blockBlobClient.upload(
+    content,
+    contentByteLength
+  );
 
   return;
 }
 
 // This function updates the database with the container info
-async function initDatabase(containerName: string, email: string) {
+async function initDatabase(
+  containerName: string,
+  email: string,
+  TAEmails: String[]
+) {
   const createCourseQuery = `INSERT INTO courses (courseName, creatorEmail) VALUES ($1, $2);`;
+  const TAQuery = `INSERT INTO course_tas (courseName, taEmail) VALUES ($1, $2);`;
   try {
     await pool.query(createCourseQuery, [containerName, email]);
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+  try {
+    TAEmails.forEach(async (TAEmail) => {
+      await pool.query(TAQuery, [containerName, TAEmail]);
+    });
   } catch (err) {
     console.log(err);
     return;

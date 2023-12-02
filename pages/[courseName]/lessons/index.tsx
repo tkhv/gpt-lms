@@ -1,4 +1,10 @@
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import { Button } from "@/components/ui/button";
+import PdfViewer from "@/components/MyPDFViewer";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -7,12 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useUserTypeContext } from "@/context/userTypeContext";
-import PdfViewer from "@/components/MyPDFViewer";
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import { Input } from "@/components/ui/input";
 
 interface myFile {
   url: string;
@@ -20,8 +20,13 @@ interface myFile {
 }
 
 export default function Lesson() {
+  const [isTA, setIsTA] = useState(false);
   const [showPdfViewer, setShowPdfViewer] = useState(false);
-
+  const [currentPdfIndex, setCurrentPdfIndex] = useState<number>(0);
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const router = useRouter();
+  let { courseName } = router.query;
+  const { data: session } = useSession();
   /*TODO*/
   //need to be change as File[]
   const [lessonList, setLessonList] = useState<myFile[]>([
@@ -30,12 +35,13 @@ export default function Lesson() {
     { url: `/lesson_1.pdf`, name: "lesson_3" },
     { url: `/lesson_2.pdf`, name: "lesson_4" },
   ]);
-  const [currentPdfIndex, setCurrentPdfIndex] = useState<number>(0);
-  const [selectedFile, setSelectedFile] = useState<File>();
-  const router = useRouter();
-  const { courseName } = router.query;
 
-  const { isTA, setIsTA } = useUserTypeContext();
+  useEffect(() => {
+    courseName = courseName as string;
+    if (session?.user.isAdminFor.includes(courseName)) {
+      setIsTA(true);
+    }
+  });
 
   const goToPreviousPdf = () => {
     if (currentPdfIndex > 0) {
@@ -132,37 +138,31 @@ export default function Lesson() {
                       <Button onClick={() => handleLessonClick(idx)}>
                         {lesson.name}
                       </Button>
-                      {isTA && (
-                        <Button
-                          onClick={() => handleDelete(idx)}
-                          className="ml-4"
-                        >
-                          Delete
-                        </Button>
-                      )}
+                      {/* {isTA && ( */}
+                      <Button
+                        onClick={() => handleDelete(idx)}
+                        className="ml-4"
+                      >
+                        Delete
+                      </Button>
+                      {/* )} */}
                     </TableCell>
                   </TableRow>
                 ))
               : "No files found"}
-            {isTA && (
-              <div className="flex flex-col w-[30vw]">
-                <Input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileSelect}
-                  id="fileInput"
-                />
-                <Button onClick={handleUpload}>Upload PDF</Button>
-              </div>
-            )}
+            {/* {isTA && ( */}
+            <div className="flex flex-col w-[30vw]">
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileSelect}
+                id="fileInput"
+              />
+              <Button onClick={handleUpload}>Upload PDF</Button>
+            </div>
+            {/* )} */}
           </TableBody>
         </Table>
-        <Button
-          className="flex justify-items-end w-20"
-          onClick={() => setIsTA(!isTA)}
-        >
-          {isTA ? "TA" : "Student"}
-        </Button>
       </div>
       <div className="flex flex-row-reverse relative">
         <div className=" absolute flex bg-white border-solid border-2 border-blue">
