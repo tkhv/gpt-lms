@@ -1,26 +1,42 @@
 "use client";
-
-import { Label } from "@/components/ui/label";
+import { QuizQuestion } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogClose,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+export function EditQuizDialog({
+  propQuestions,
+  propQuizName,
+}: {
+  propQuestions: QuizQuestion[];
+  propQuizName: string;
+}) {
+  const [questions, setQuestions] = useState<QuizQuestion[]>(propQuestions);
+  const [quizName, setQuizName] = useState(propQuizName);
+  const { data: session } = useSession();
+  const courseName = session?.user.courseList[0];
 
-import { Dispatch, SetStateAction, useState } from "react";
-import { Quiz, QuizQuestion } from "@/lib/types";
-
-interface quizQuestionsProps {
-  questions: QuizQuestion[];
-  setQuestions: Dispatch<SetStateAction<QuizQuestion[]>>;
-}
-
-const QuizEditor: React.FC<quizQuestionsProps> = ({
-  questions,
-  setQuestions,
-}) => {
-  //   const [questions, setQuestions] = useState<QuizQuestion[]>(questions);
+  const handleSubmit = () => {
+    // update the quesitons using api
+    console.log(quizName);
+    console.log(questions);
+    if (propQuizName.length == 0) {
+      setQuestions([]);
+      setQuizName("");
+    }
+  };
 
   const defaultMCQQuestion: QuizQuestion = {
     questionNum: questions.length + 1,
@@ -122,17 +138,22 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
     setQuestions(updatedQuestions);
   };
 
-  const handleSubmit = () => {
-    /*
-    1. Need a popup to make sure the Ta finished editing.
-    2. update the quesitons using api
-    3. back to the previous page
-    */
-    console.log(questions);
-  };
-
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+    <DialogContent className="sm:max-w-[60%]">
+      <DialogHeader>
+        <DialogTitle>Create new Quiz</DialogTitle>
+        <DialogDescription>
+          Add details and create when you&apos;re done.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="flex flex-row p-2 items-center gap-2">
+        Name
+        <Input
+          value={quizName}
+          onChange={(e) => setQuizName(e.target.value)}
+          placeholder="Type your quiz name here."
+        />
+      </div>
       <ScrollArea className="h-[600px] w-[800px] rounded-md border p-4">
         <div>
           {questions.map((q, qIndex) => (
@@ -221,9 +242,13 @@ const QuizEditor: React.FC<quizQuestionsProps> = ({
           ADD FRQ
         </Button>
       </ScrollArea>
-      <Button onClick={handleSubmit}>submit</Button>
-    </div>
+      <DialogClose asChild>
+        <DialogFooter>
+          <Button type="submit" onClick={handleSubmit}>
+            {propQuizName ? `Save Quiz` : `Create Quiz`}
+          </Button>
+        </DialogFooter>
+      </DialogClose>
+    </DialogContent>
   );
-};
-
-export default QuizEditor;
+}
