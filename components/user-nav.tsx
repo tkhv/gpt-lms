@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -19,6 +21,12 @@ export function UserNav({
   username: string;
   imageURL: string;
 }) {
+  let loggedIn = false;
+  const { data: session } = useSession();
+  if (session?.user) {
+    loggedIn = true;
+  }
+
   return (
     <Dialog>
       <DropdownMenu>
@@ -44,12 +52,22 @@ export function UserNav({
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DialogTrigger asChild>
-              <DropdownMenuItem>Add Course</DropdownMenuItem>
-            </DialogTrigger>
+            {loggedIn && (
+              <DialogTrigger asChild>
+                <DropdownMenuItem>Add Course</DropdownMenuItem>
+              </DialogTrigger>
+            )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          {loggedIn ? (
+            <Link href="/api/auth/signout">
+              <DropdownMenuItem>Sign Out</DropdownMenuItem>
+            </Link>
+          ) : (
+            <Link href="/api/auth/signin">
+              <DropdownMenuItem>Sign In</DropdownMenuItem>
+            </Link>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <AddCourseDialog />
