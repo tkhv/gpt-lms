@@ -1,5 +1,5 @@
 "use client";
-import { QuizQuestion } from "@/lib/types";
+import { QuizQuestion, Quiz } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -28,11 +28,28 @@ export function EditQuizDialog({
   const { data: session } = useSession();
   const courseName = session?.user.courseList[0];
 
-  const handleSubmit = () => {
-    // update the quesitons using api
-    console.log(quizName);
-    console.log(questions);
+  const handleSubmit = async () => {
+    const quiz: Quiz = {
+      name: quizName,
+      questions: questions,
+      totalPoints: questions.reduce((acc, q) => acc + q.points, 0),
+      submissions: {},
+    };
+    try {
+      const res = fetch(`/api/${courseName}/saveQuiz`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(quiz),
+      });
+      console.log(await res);
+    } catch (err) {
+      console.error(err);
+    }
     if (propQuizName.length == 0) {
+      // If creating a new quiz, reset the questions and
+      // name fields whenever the dialog is closed.
       setQuestions([]);
       setQuizName("");
     }
