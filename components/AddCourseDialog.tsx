@@ -50,13 +50,10 @@ export function AddCourseDialog() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let courseName = values.courseName.toLowerCase();
     // make API call to create course by api at /api/courses/[courseName]/create
-    let response = await fetch(
-      "http://localhost:3000/api/" + courseName + "/create",
-      {
-        method: "POST",
-        body: JSON.stringify(values.ListTAs),
-      }
-    );
+    let response = await fetch("/api/" + courseName + "/create", {
+      method: "POST",
+      body: JSON.stringify(values.ListTAs),
+    });
 
     response = await response;
 

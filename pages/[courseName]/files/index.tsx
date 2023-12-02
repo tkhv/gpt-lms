@@ -1,4 +1,3 @@
-import type { GetStaticProps, GetStaticPaths } from "next";
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -12,13 +11,8 @@ import {
 import { FilesList } from "../../../lib/types";
 import { useRouter } from "next/router";
 
-type CourseProps = {
-  courseName: string;
-};
-
 async function getFilesList(courseName: string) {
-  const baseUrl = window.location.protocol + "//" + window.location.host;
-  let res = await fetch(baseUrl + "/api/" + courseName + "/listFiles", {
+  let res = await fetch("/api/" + courseName + "/listFiles", {
     method: "GET",
   });
 
@@ -29,7 +23,6 @@ async function getFilesList(courseName: string) {
   return await res.json();
 }
 
-// export default function Files({ courseName }: CourseProps) {
 export default function Files() {
   const [filesList, setFilesList] = useState<FilesList>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -88,41 +81,3 @@ export default function Files() {
     </div>
   );
 }
-
-/* This function gets called at build time to define
-the possible options for the dynamic route. We fetch
-the courseList for the logged in user and pre-render
-those. */
-// export const getStaticPaths: GetStaticPaths = (async () => {
-//   // Call our API to get courseList for this user.
-//   // This is dummy data
-//   const courseList = [
-//     { name: "cs2200" },
-//     { name: "cs3312" },
-//     { name: "cs4400" },
-//   ];
-
-//   const paths = courseList.map((course) => ({
-//     params: { courseName: course.name },
-//   }));
-
-//   // { fallback: false } means other routes should 404.
-//   return {
-//     paths: paths,
-//     fallback: false,
-//   };
-// }) satisfies GetStaticPaths;
-
-// // pre-render this page at build time
-// export const getStaticProps: GetStaticProps<CourseProps> = async ({
-//   params,
-// }) => {
-//   if (!params || typeof params.courseName !== "string") {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   const courseName = params.courseName;
-//   return { props: { courseName } };
-// };
