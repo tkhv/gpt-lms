@@ -1,14 +1,13 @@
 "use client";
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useRouter } from "next/router";
 
 const Sidebar: FC = () => {
   const [tabList, setTableList] = useState([
     "Home",
-    "Assignments",
     "Quizzes",
-    "Modules",
+    "Lessons",
     "Files",
   ]);
   const router = useRouter();
