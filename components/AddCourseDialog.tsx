@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -23,29 +23,38 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Tag, TagInput } from "./ui/tag-input";
 
 const formSchema = z.object({
   courseName: z.string().min(2),
-  ListTAs: z.string().min(2),
+  ListTAs: z.array(
+    z.object({
+      id: z.string(),
+      text: z.string(),
+    })
+  ),
 });
 
 export function AddCourseDialog() {
+  const [tags, setTags] = useState<Tag[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       courseName: "",
-      ListTAs: "",
+      ListTAs: [],
     },
   });
+  const { setValue } = form;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let courseName = values.courseName;
+    let courseName = values.courseName.toLowerCase();
     // make API call to create course by api at /api/courses/[courseName]/create
     let response = await fetch(
       "http://localhost:3000/api/" + courseName + "/create",
       {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify(values.ListTAs),
       }
     );
 
@@ -59,7 +68,7 @@ export function AddCourseDialog() {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[40%]">
       <DialogHeader>
         <DialogTitle>Create new course</DialogTitle>
         <DialogDescription>
@@ -85,12 +94,21 @@ export function AddCourseDialog() {
             control={form.control}
             name="ListTAs"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>List TAs</FormLabel>
+              <FormItem className="flex flex-col items-start">
+                <FormLabel className="text-left">Teaching Assistants</FormLabel>
                 <FormControl>
-                  <Input placeholder="@username" {...field} />
+                  <TagInput
+                    {...field}
+                    placeholder="Enter TA emails"
+                    tags={tags}
+                    className="sm:min-w-[450px]"
+                    setTags={(newTags) => {
+                      setTags(newTags);
+                      setValue("ListTAs", newTags as [Tag, ...Tag[]]);
+                    }}
+                  />
                 </FormControl>
-                <FormDescription>Enter as comma-seperated list</FormDescription>
+                <FormDescription>Press enter to add an email</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
