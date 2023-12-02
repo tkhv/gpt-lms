@@ -20,7 +20,6 @@ interface myFile {
 }
 
 export default function Lesson() {
-  const pdfFile = "path_to_your_pdf_file.pdf";
   const [showPdfViewer, setShowPdfViewer] = useState(false);
 
   /*TODO*/
@@ -33,7 +32,6 @@ export default function Lesson() {
   ]);
   const [currentPdfIndex, setCurrentPdfIndex] = useState<number>(0);
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [selectedLessonName, setSelectedLessonName] = useState<string>("");
   const router = useRouter();
   const { courseName } = router.query;
 
@@ -148,11 +146,6 @@ export default function Lesson() {
               : "No files found"}
             {isTA && (
               <div className="flex flex-col w-[30vw]">
-                <Input
-                  value={selectedLessonName}
-                  onChange={(e) => setSelectedLessonName(e.target.value)}
-                  placeholder="Type the Lesson name"
-                />
                 <Input
                   type="file"
                   accept="application/pdf"
