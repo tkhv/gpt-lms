@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { useCourseContext } from "../context/courseContext";
 import { useRouter } from "next/router";
 
 const Sidebar: FC = () => {

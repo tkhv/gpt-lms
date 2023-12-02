@@ -1,18 +1,10 @@
 import * as React from "react";
-import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { CourseList } from "@/lib/types";
 
-const NavbarLayout = ({
-  children,
-  courseList,
-}: {
-  children: React.ReactNode;
-  courseList: CourseList;
-}) => {
+const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Navbar courseList={courseList} />
+      <Navbar />
       {children}
     </>
   );

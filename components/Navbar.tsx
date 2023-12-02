@@ -1,19 +1,16 @@
 "use client";
 import Link from "next/link";
-import { FC } from "react";
-import { Course, CourseList, User } from "@/lib/types";
-
 import { UserNav } from "./user-nav";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-type NavbarProps = {
-  courseList: CourseList;
-  // user: User;
-};
-
-const Navbar: FC<NavbarProps> = ({ courseList }) => {
+const Navbar = () => {
   const router = useRouter();
   const { courseName } = router.query;
+  const { data: session } = useSession();
+  const username = session?.user.name;
+  const imageURL = session?.user.image;
+  const courseList = session?.user.courseList || [];
 
   const pathName = useRouter();
 
@@ -25,7 +22,7 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
   return (
     <nav className="flex flex-col bg-navbarColor text-white h-screen">
       <div className="p-4 mb-2 mt-4 flex flex-col items-center">
-        {/* <UserNav username={user.name} imageURL={user.image} /> */}
+        <UserNav username={username || ""} imageURL={imageURL || ""} />
       </div>
       <div className="flex flex-col flex-grow">
         {/* Links */}
@@ -37,17 +34,17 @@ const Navbar: FC<NavbarProps> = ({ courseList }) => {
         >
           Dashboard
         </Link>
-        {courseList.map((course: Course) => (
+        {courseList.map((courseName, index) => (
           <Link
-            key={course.id}
-            href={`/${course.name || courseName}`}
+            key={index}
+            href={`/${courseName || courseName}`}
             className={`p-4 block ${
-              isActive(`${course.name}`)
+              isActive(`${courseName}`)
                 ? "bg-sidebarColor"
                 : "hover:bg-sidebarColor"
             }`}
           >
-            {course.name}
+            {courseName}
           </Link>
         ))}
       </div>

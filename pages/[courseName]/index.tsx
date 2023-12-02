@@ -1,57 +1,41 @@
-import SidebarLayout from "@/components/SidebarLayout";
-// import Sidebar from "@/components/Sidebar";
-import type { GetStaticProps, GetStaticPaths } from "next";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
 
-type CourseProps = {
-  courseName: string;
-};
+// Download the blob content
+async function getReadme(courseName: string) {
+  try {
+    const response = await fetch(
+      `/api/` + courseName + `/getReadme?courseName=${courseName}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.content;
+    } else {
+      throw new Error("Failed to fetch blob content");
+    }
+  } catch (error) {
+    throw new Error("Error fetching blob content");
+  }
+}
 
-// export default function Course({ courseName }: CourseProps) {
 export default function Course() {
   const router = useRouter();
   const { courseName } = router.query;
-  return <p>Name: {courseName}</p>;
+  const [content, setContent] = useState<string>("");
+  useEffect(() => {
+    if (typeof courseName === "string") {
+      getReadme(courseName)
+        .then((resContent) => {
+          setContent(resContent);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [courseName]);
+
+  return (
+    <div>
+      <ReactMarkdown className="prose">{content}</ReactMarkdown>
+    </div>
+  );
 }
-
-/* This function gets called at build time to define
-the possible options for the dynamic route. We fetch 
-the courseList for the logged in user and pre-render 
-those. */
-// export const getStaticPaths: GetStaticPaths = (async () => {
-//   // Call our API to get courseList for this user.
-//   // This is dummy data
-//   const courseList = [
-//     { name: "cs2200" },
-//     { name: "cs3312" },
-//     { name: "cs4400" },
-//   ];
-
-//   const paths = courseList.map((course) => ({
-//     params: { courseName: course.name },
-//   }));
-
-//   // { fallback: false } means other routes should 404.
-//   return {
-//     paths: paths,
-//     fallback: false,
-//   };
-// }) satisfies GetStaticPaths;
-
-// // pre-render this page at build time
-// export const getStaticProps: GetStaticProps<CourseProps> = async ({
-//   params,
-// }) => {
-//   if (!params || typeof params.courseName !== "string") {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   const courseName = params.courseName;
-//   return { props: { courseName } };
-// };
-
-// Course.getLayout = function (page: React.ReactNode) {
-//   return <SidebarLayout>{page}</SidebarLayout>;
-// };
