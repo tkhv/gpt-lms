@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { FilesList } from "../../../lib/types";
+import { File } from "../../../lib/types";
 import { useRouter } from "next/router";
 
 async function getFilesList(courseName: string) {
@@ -24,7 +24,7 @@ async function getFilesList(courseName: string) {
 }
 
 export default function Files() {
-  const [filesList, setFilesList] = useState<FilesList>([]);
+  const [filesList, setFilesList] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const router = useRouter();
   const { courseName } = router.query;
