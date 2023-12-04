@@ -187,20 +187,16 @@ export default function Lesson() {
           <TableBody>
             {lessonList
               ? lessonList.map((lesson, idx) => (
-                  <TableRow key={lesson.name}>
-                    <TableCell>
-                      <Button onClick={() => handleLessonClick(idx)}>
-                        {lesson.name}
-                      </Button>
-                      {/* {isTA && ( */}
-                      <Button
-                        onClick={() => handleDelete(idx)}
-                        className="ml-4"
-                      >
-                        Delete
-                      </Button>
-                      {/* )} */}
+                  <TableRow key={idx}>
+                    <TableCell
+                      onClick={() => handleLessonClick(idx)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {lesson.name}
                     </TableCell>
+                    <Button onClick={() => handleDelete(idx)} className="ml-4">
+                      Delete
+                    </Button>
                   </TableRow>
                 ))
               : "No files found"}
@@ -218,15 +214,15 @@ export default function Lesson() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-row-reverse relative">
-        <div className=" absolute flex bg-white border-solid border-2 border-blue">
+      <div className="flex flex-row-reverse relative w-1000">
+        <div className=" absolute flex bg-white border-solid border-2 border-blue w-1000">
           <Button onClick={() => setShowPdfViewer((prev) => !prev)}>
             {showPdfViewer ? ">>" : "<<"}
           </Button>
           {showPdfViewer &&
             currentPdfIndex >= 0 &&
             currentPdfIndex < lessonList.length && (
-              <div className="flex items-center justify-start">
+              <div className="flex items-center justify-start w-100">
                 <Button
                   onClick={goToPreviousPdf}
                   disabled={currentPdfIndex <= 0}
