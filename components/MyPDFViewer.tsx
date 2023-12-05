@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { Button } from "./ui/button";
+import { Toggle } from "@/components/ui/toggle";
 
 // Set worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -19,6 +20,7 @@ interface PdfViewerProps {
   lastLesson: boolean;
   goToNextPdf: () => void;
   goToPreviousPdf: () => void;
+  toggleChat: () => void;
 }
 
 const PdfViewer: React.FC<PdfViewerProps> = ({
@@ -28,6 +30,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
   lastLesson,
   goToNextPdf,
   goToPreviousPdf,
+  toggleChat,
 }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1); // Current page
@@ -62,7 +65,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
   }, [numPages]);
 
   return (
-    <div className="flex flex-col items-center h-[100vh] w-[50vw] justify-around">
+    <div className="flex flex-col items-center h-[90vh] w-[50vw] justify-around">
       {/* Navigation and Zoom Controls */}
       <div className="flex justify-between items-center space-x-2">
         <Button
@@ -107,6 +110,14 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
             Next
           </Button>
         </div>
+        <Toggle
+          variant="outline"
+          aria-label="Toggle italic"
+          onClick={toggleChat}
+          className="max-h-6 bg-black text-white"
+        >
+          GPTa
+        </Toggle>
       </div>
 
       {/* Scrollable PDF Document */}

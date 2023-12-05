@@ -1,10 +1,8 @@
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import PdfViewer from "@/components/MyPDFViewer";
-import {
-  DialogContent,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
+import { DialogContent, DialogClose } from "@/components/ui/dialog";
+import ChatArea from "./ChatArea";
+import { useState } from "react";
 
 export function LessonsDialog({
   lessonURL,
@@ -21,8 +19,11 @@ export function LessonsDialog({
   firstLesson: boolean;
   lastLesson: boolean;
 }) {
+  const [chatVisible, setChatVisible] = useState(false);
+  const toggleChat = () => setChatVisible((prev) => !prev);
+
   return (
-    <DialogContent className="max-w-[60%] max-h-[98%]">
+    <DialogContent className="w-auto max-w-[92%] max-h-[98%]">
       <div className="flex items-center justify-start w-100">
         <PdfViewer
           file={lessonURL}
@@ -31,15 +32,23 @@ export function LessonsDialog({
           lastLesson={lastLesson}
           goToNextPdf={goToNextPdf}
           goToPreviousPdf={goToPreviousPdf}
-          /*TODO*/
-          /* when lessonList replace with File[] */
-          //   file={${lessonList[currentPdfIndex]}}
-          //   lessonName={lessonList[currentPdfIndex].name}
+          toggleChat={toggleChat}
         />
+        {chatVisible && (
+          <div
+            style={{
+              flex: 1,
+              width: "40vw",
+              paddingRight: "20px",
+              paddingTop: "28px",
+              height: "90vh",
+            }}
+          >
+            <ChatArea />
+          </div>
+        )}
       </div>
-      <DialogClose asChild>
-        <DialogFooter>footer</DialogFooter>
-      </DialogClose>
+      <DialogClose asChild></DialogClose>
     </DialogContent>
   );
 }
