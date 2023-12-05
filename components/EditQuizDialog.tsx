@@ -1,7 +1,7 @@
 "use client";
 import { QuizQuestion, Quiz } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DialogContent,
@@ -25,8 +25,8 @@ export function EditQuizDialog({
 }) {
   const [questions, setQuestions] = useState<QuizQuestion[]>(propQuestions);
   const [quizName, setQuizName] = useState(propQuizName);
-  const { data: session } = useSession();
-  const courseName = session?.user.courseList[0];
+  const router = useRouter();
+  const { courseName } = router.query;
 
   const handleSubmit = async () => {
     const quiz: Quiz = {
