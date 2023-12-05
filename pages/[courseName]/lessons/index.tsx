@@ -53,18 +53,21 @@ async function getSAS(courseName: string, fileName: string) {
   return sasURL;
 }
 
-async function embeddings(courseName: string, file: File) {
-  let res = await fetch("/api/" + courseName + "/pdfHandler", {
-    method: "POST",
-    body: file,
-  });
+async function embeddings(courseName: string, fileName: string) {
+  // let data = new FormData();
+  // data.set("file", file);
+
+  let res = await fetch(
+    "/api/" + courseName + "/pdfHander?filename=lessons/" + fileName,
+    {
+      method: "POST",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch lessons");
   }
-
-  let lessonsList = await res.json();
-  return lessonsList;
+  console.log(res);
 }
 
 export default function Lesson() {
@@ -150,25 +153,23 @@ export default function Lesson() {
     if (selectedFile) {
       try {
         // first get SAS URL in a GET request to getSAS with the file name as a query param
-        const sasURL: string = await getSAS(
-          courseName as string,
-          selectedFile.name
-        );
-        const uploadResponse = await fetch(sasURL, {
-          method: "PUT",
-          body: selectedFile, // This should be your file
-          headers: {
-            "x-ms-blob-type": "BlockBlob",
-          },
-        });
+        // const sasURL: string = await getSAS(
+        //   courseName as string,
+        //   selectedFile.name
+        // );
+        // const uploadResponse = await fetch(sasURL, {
+        //   method: "PUT",
+        //   body: selectedFile, // This should be your file
+        //   headers: {
+        //     "x-ms-blob-type": "BlockBlob",
+        //   },
+        // });
 
-        const text = await embeddings(courseName as string, selectedFile);
+        await embeddings(courseName as string, selectedFile.name);
 
-        console.log(text);
-
-        if (!uploadResponse.ok) {
-          throw new Error("File upload failed");
-        }
+        // if (!uploadResponse.ok) {
+        //   throw new Error("File upload failed");
+        // }
 
         console.log("File uploaded successfully");
 
