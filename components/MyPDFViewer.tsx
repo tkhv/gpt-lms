@@ -15,9 +15,20 @@ and replace lessonName with file.name. that's all
 interface PdfViewerProps {
   file: string;
   lessonName: string;
+  firstLesson: boolean;
+  lastLesson: boolean;
+  goToNextPdf: () => void;
+  goToPreviousPdf: () => void;
 }
 
-const PdfViewer: React.FC<PdfViewerProps> = ({ file, lessonName }) => {
+const PdfViewer: React.FC<PdfViewerProps> = ({
+  file,
+  lessonName,
+  firstLesson,
+  lastLesson,
+  goToNextPdf,
+  goToPreviousPdf,
+}) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1); // Current page
   const [scale, setScale] = useState(1.0); // PDF scale
@@ -51,40 +62,50 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ file, lessonName }) => {
   }, [numPages]);
 
   return (
-    <div className="flex flex-col items-center h-[100vh] w-[50vw]">
+    <div className="flex flex-col items-center h-[100vh] w-[50vw] justify-around">
       {/* Navigation and Zoom Controls */}
-      <div className="flex justify-between items-center space-x-2 mb-4 w-full">
-        <div className="flex gap-2">
-          <Button
-            onClick={() => scrollToPage(currentPage - 1)}
-            disabled={currentPage <= 1}
-          >
-            Prev
-          </Button>
-          <Button
-            onClick={() => scrollToPage(currentPage + 1)}
-            disabled={currentPage >= numPages}
-          >
-            Next
-          </Button>
-        </div>
+      <div className="flex justify-between items-center space-x-2">
+        <Button
+          onClick={goToPreviousPdf}
+          disabled={firstLesson}
+          className="max-h-6"
+        >
+          {"<"}
+        </Button>
         <h2 className="flex-grow text-center">{lessonName}</h2>
+        <Button onClick={goToNextPdf} disabled={lastLesson} className="max-h-6">
+          {">"}
+        </Button>
         <div className="flex gap-2">
           <Button
             onClick={zoomIn}
-            className="bg-blue-300 hover:bg-blue-400 text-blue-800"
+            className="bg-blue-300 hover:bg-blue-400 text-blue-800 max-h-5"
           >
-            Zoom In
+            +
           </Button>
           <Button
             onClick={zoomOut}
-            className="bg-blue-300 hover:bg-blue-400 text-blue-800"
+            className="bg-blue-300 hover:bg-blue-400 text-blue-800 max-h-5"
           >
-            Zoom Out
+            -
+          </Button>
+          <Button
+            onClick={() => scrollToPage(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="max-h-5"
+          >
+            Prev
           </Button>
           <span className="text-lg">
-            Page {currentPage} of {numPages}
+            {currentPage} of {numPages}
           </span>
+          <Button
+            onClick={() => scrollToPage(currentPage + 1)}
+            disabled={currentPage >= numPages}
+            className="max-h-5"
+          >
+            Next
+          </Button>
         </div>
       </div>
 
