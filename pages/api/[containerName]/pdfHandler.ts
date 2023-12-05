@@ -2,12 +2,17 @@ import OpenAI from "openai";
 // import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import PDFParser from "pdf-parse";
 import { Buffer } from "buffer";
+const { NextApiRequest, NextApiResponse } = require("next/server");
 
-// const openai = new OpenAI({
-//   organization: "YOUR_ORG_ID",
-// });
+export default async function POST(
+  req: typeof NextApiRequest,
+  res: typeof NextApiResponse
+) {
+  const { containerName } = req.query;
+  // const openai = new OpenAI({
+  //   organization: "YOUR_ORG_ID",
+  // });
 
-export async function getEmbeddings(file: File) {
   /* PDFLoder 
     make file to text */
 
@@ -18,13 +23,12 @@ export async function getEmbeddings(file: File) {
   // const docs = await loader.load();
 
   // console.log(docs);
-  const buffer = await file.arrayBuffer();
-  const data = Buffer.from(new Uint8Array(buffer)); // Convert Uint8Array to Buffer
+  const data = Buffer.from(new Uint8Array(req.body));
   const text = await PDFParser(data);
 
   console.log("ddd");
 
-  return text;
+  res.status(200).json({ text: text });
 
   // const embedding = await openai.embeddings.create({
   //   model: "text-embedding-ada-002",

@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getEmbeddings } from "@/pages/api/[containerName]/pdfHandler";
 
 interface myFile {
   url: string;
@@ -52,6 +51,20 @@ async function getSAS(courseName: string, fileName: string) {
 
   const sasURL = (await response.json()).sasURL;
   return sasURL;
+}
+
+async function embeddings(courseName: string, file: File) {
+  let res = await fetch("/api/" + courseName + "/pdfHandler", {
+    method: "POST",
+    body: file,
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch lessons");
+  }
+
+  let lessonsList = await res.json();
+  return lessonsList;
 }
 
 export default function Lesson() {
@@ -149,7 +162,8 @@ export default function Lesson() {
           },
         });
 
-        const text = await getEmbeddings(selectedFile);
+        const text = await embeddings(courseName as string, selectedFile);
+
         console.log(text);
 
         if (!uploadResponse.ok) {
