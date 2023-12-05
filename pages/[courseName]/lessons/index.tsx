@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getEmbeddings } from "@/pages/api/[containerName]/pdfHandler";
 
 interface myFile {
   url: string;
@@ -147,6 +148,9 @@ export default function Lesson() {
             "x-ms-blob-type": "BlockBlob",
           },
         });
+
+        const text = await getEmbeddings(selectedFile);
+        console.log(text);
 
         if (!uploadResponse.ok) {
           throw new Error("File upload failed");
