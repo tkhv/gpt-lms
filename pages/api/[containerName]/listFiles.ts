@@ -3,7 +3,7 @@ const { NextApiRequest, NextApiResponse } = require("next/server");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { ContainerClient } = require("@azure/storage-blob");
 
-import { FilesList } from "../../../lib/types";
+import { File } from "../../../lib/types";
 
 /* This GET endpoint is called by the client to list all files in a specified container.
     A FilesList is returned. */
@@ -18,7 +18,7 @@ export default async function GET(
     new DefaultAzureCredential()
   );
 
-  const files: FilesList = [];
+  const files: File[] = [];
   for await (let blob of containerClient.listBlobsFlat()) {
     const tempBlockBlobClient = containerClient.getBlockBlobClient(blob.name);
     blob = blob.name.split("/");

@@ -19,8 +19,44 @@ interface myFile {
   name: string;
 }
 
+async function getLessons(courseName: string) {
+  let res = await fetch("/api/" + courseName + "/listFiles", {
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch lessons");
+  }
+
+  let lessonsList = (await res.json()).filter(
+    (file: any) => file.type === "lessons"
+  );
+  // generate a SAS URL for each file and replace the url with the SAS URL
+  for (let i = 0; i < lessonsList.length; i++) {
+    const fileName = lessonsList[i].name;
+    const sasURL = await getSAS(courseName, fileName);
+    lessonsList[i].url = sasURL;
+  }
+  return lessonsList;
+}
+
+async function getSAS(courseName: string, fileName: string) {
+  const response = await fetch(
+    `/api/${courseName}/getSAS?filename=lessons/${fileName}`
+  );
+
+  if (!response.ok) {
+    throw new Error("File upload failed");
+  }
+
+  const sasURL = (await response.json()).sasURL;
+  return sasURL;
+}
+
 export default function Lesson() {
   const [isTA, setIsTA] = useState(false);
+  const [lessonsList, setLessonsList] = useState([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [currentPdfIndex, setCurrentPdfIndex] = useState<number>(0);
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -29,12 +65,7 @@ export default function Lesson() {
   const { data: session } = useSession();
   /*TODO*/
   //need to be change as File[]
-  const [lessonList, setLessonList] = useState<myFile[]>([
-    { url: `/lesson_1.pdf`, name: "lesson_1" },
-    { url: `/lesson_2.pdf`, name: "lesson_2" },
-    { url: `/lesson_1.pdf`, name: "lesson_3" },
-    { url: `/lesson_2.pdf`, name: "lesson_4" },
-  ]);
+  const [lessonList, setLessonList] = useState<myFile[]>([]);
 
   useEffect(() => {
     courseName = courseName as string;
@@ -42,6 +73,22 @@ export default function Lesson() {
       setIsTA(true);
     }
   });
+
+  useEffect(() => {
+    if (typeof courseName === "string") {
+      getLessons(courseName)
+        .then((lessonsList) => {
+          // convert the list of files to a list of myFile[] with name and url
+          const files: myFile[] = lessonsList.map((lesson: any) => ({
+            name: lesson.name,
+            url: lesson.url,
+          }));
+          setLessonList(files);
+          setIsLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [courseName]);
 
   const goToPreviousPdf = () => {
     if (currentPdfIndex > 0) {
@@ -87,29 +134,36 @@ export default function Lesson() {
   /*TODO*/
   const handleUpload = async () => {
     if (selectedFile) {
-      // Add to lessonList
-      //   setLessonList([...lessonList, selectedFile]);
-
-      // Upload to server
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
       try {
-        // Replace with your API endpoint
-        // const response = await fetch("/api/upload", {
-        //   method: "POST",
-        //   body: formData,
-        // });
+        // first get SAS URL in a GET request to getSAS with the file name as a query param
+        const sasURL: string = await getSAS(
+          courseName as string,
+          selectedFile.name
+        );
+        const uploadResponse = await fetch(sasURL, {
+          method: "PUT",
+          body: selectedFile, // This should be your file
+          headers: {
+            "x-ms-blob-type": "BlockBlob",
+          },
+        });
 
-        // if (!response.ok) {
-        //   throw new Error("File upload failed");
-        // }
+        if (!uploadResponse.ok) {
+          throw new Error("File upload failed");
+        }
+
+        console.log("File uploaded successfully");
+
+        // Reset selected file after successful upload
+        setSelectedFile(undefined);
 
         // Reset selected file after successful upload
         setSelectedFile(undefined);
       } catch (error) {
         console.error("Upload error:", error);
       }
+      // Add to lessonList
+      //   setLessonList([...lessonList, selectedFile]);
     }
   };
 
@@ -133,20 +187,16 @@ export default function Lesson() {
           <TableBody>
             {lessonList
               ? lessonList.map((lesson, idx) => (
-                  <TableRow key={lesson.name}>
-                    <TableCell>
-                      <Button onClick={() => handleLessonClick(idx)}>
-                        {lesson.name}
-                      </Button>
-                      {/* {isTA && ( */}
-                      <Button
-                        onClick={() => handleDelete(idx)}
-                        className="ml-4"
-                      >
-                        Delete
-                      </Button>
-                      {/* )} */}
+                  <TableRow key={idx}>
+                    <TableCell
+                      onClick={() => handleLessonClick(idx)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {lesson.name}
                     </TableCell>
+                    <Button onClick={() => handleDelete(idx)} className="ml-4">
+                      Delete
+                    </Button>
                   </TableRow>
                 ))
               : "No files found"}
@@ -164,15 +214,15 @@ export default function Lesson() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-row-reverse relative">
-        <div className=" absolute flex bg-white border-solid border-2 border-blue">
+      <div className="flex flex-row-reverse relative w-1000">
+        <div className=" absolute flex bg-white border-solid border-2 border-blue w-1000">
           <Button onClick={() => setShowPdfViewer((prev) => !prev)}>
             {showPdfViewer ? ">>" : "<<"}
           </Button>
           {showPdfViewer &&
             currentPdfIndex >= 0 &&
             currentPdfIndex < lessonList.length && (
-              <div className="flex items-center justify-start">
+              <div className="flex items-center justify-start w-100">
                 <Button
                   onClick={goToPreviousPdf}
                   disabled={currentPdfIndex <= 0}
