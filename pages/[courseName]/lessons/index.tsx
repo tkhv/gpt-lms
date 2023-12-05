@@ -54,11 +54,8 @@ async function getSAS(courseName: string, fileName: string) {
 }
 
 async function embeddings(courseName: string, fileName: string) {
-  // let data = new FormData();
-  // data.set("file", file);
-
   let res = await fetch(
-    "/api/" + courseName + "/pdfHander?filename=lessons/" + fileName,
+    "/api/" + courseName + "/pdfHander?filename=" + fileName,
     {
       method: "POST",
     }
