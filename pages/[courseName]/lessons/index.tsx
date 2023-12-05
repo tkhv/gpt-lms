@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import { Button } from "@/components/ui/button";
-import PdfViewer from "@/components/MyPDFViewer";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -13,6 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { LessonsDialog } from "@/components/LessonsDialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 interface myFile {
   url: string;
@@ -55,16 +55,15 @@ async function getSAS(courseName: string, fileName: string) {
 
 export default function Lesson() {
   const [isTA, setIsTA] = useState(false);
-  const [lessonsList, setLessonsList] = useState([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
-  const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [currentPdfIndex, setCurrentPdfIndex] = useState<number>(0);
+  const [currentPdfURL, setCurentPdfURL] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [currentPdfName, setCurrentPdfName] = useState<string>("");
+
   const router = useRouter();
   let { courseName } = router.query;
   const { data: session } = useSession();
-  /*TODO*/
-  //need to be change as File[]
+  // TODO need to be change as File[]
   const [lessonList, setLessonList] = useState<myFile[]>([]);
 
   useEffect(() => {
@@ -84,7 +83,6 @@ export default function Lesson() {
             url: lesson.url,
           }));
           setLessonList(files);
-          setIsLoading(false);
         })
         .catch((err) => console.error(err));
     }
@@ -93,32 +91,23 @@ export default function Lesson() {
   const goToPreviousPdf = () => {
     if (currentPdfIndex > 0) {
       setCurrentPdfIndex(currentPdfIndex - 1);
+      setCurentPdfURL(lessonList[currentPdfIndex - 1].url);
+      setCurrentPdfName(lessonList[currentPdfIndex - 1].name);
     }
   };
 
   const goToNextPdf = () => {
     if (currentPdfIndex < lessonList.length - 1) {
       setCurrentPdfIndex(currentPdfIndex + 1);
+      setCurentPdfURL(lessonList[currentPdfIndex + 1].url);
+      setCurrentPdfName(lessonList[currentPdfIndex + 1].name);
     }
   };
 
   const handleLessonClick = (idx: number) => {
     setCurrentPdfIndex(idx);
-    setShowPdfViewer(true);
-  };
-
-  const handleDelete = (index: number) => {
-    // Update lesson list to remove the selected lesson
-    const updatedLessons = lessonList.filter((_, idx) => idx !== index);
-    setLessonList(updatedLessons);
-
-    // If the current PDF is deleted, hide the viewer or show the previous/next one
-    if (currentPdfIndex === index) {
-      setCurrentPdfIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
-      setShowPdfViewer(updatedLessons.length > 0);
-    }
-
-    // delete the lesson from the container using api
+    setCurrentPdfName(lessonList[idx].name);
+    setCurentPdfURL(lessonList[idx].url);
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +120,6 @@ export default function Lesson() {
     }
   };
 
-  /*TODO*/
   const handleUpload = async () => {
     if (selectedFile) {
       try {
@@ -168,86 +156,59 @@ export default function Lesson() {
   };
 
   return (
-    <>
-      <div className="hidden h-full flex-1 flex-col space-y-8 pl-8 pt-8 pb-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {courseName} Lessons
-            </h2>
+    <div className="hidden h-full flex-1 flex-col space-y-8 pl-8 pt-8 pb-8 md:flex">
+      <div className="flex items-center justify-between space-y-2">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {courseName} Lessons
+          </h2>
+        </div>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Lessons</TableHead>
+            {/* <TableHead className="text-right"></TableHead> */}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {lessonList
+            ? lessonList.map((lesson, idx) => (
+                <TableRow key={idx}>
+                  <Dialog>
+                    <DialogTrigger>
+                      <TableCell
+                        onClick={() => handleLessonClick(idx)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {lesson.name}
+                      </TableCell>
+                    </DialogTrigger>
+                    <LessonsDialog
+                      lessonURL={currentPdfURL}
+                      lessonName={currentPdfName}
+                      goToNextPdf={goToNextPdf}
+                      goToPreviousPdf={goToPreviousPdf}
+                      firstLesson={currentPdfIndex <= 0}
+                      lastLesson={currentPdfIndex >= lessonList.length - 1}
+                    />
+                  </Dialog>
+                </TableRow>
+              ))
+            : "No files found"}
+          {/* {isTA && ( */}
+          <div className="flex flex-col w-[30vw]">
+            <Input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileSelect}
+              id="fileInput"
+            />
+            <Button onClick={handleUpload}>Upload PDF</Button>
           </div>
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Lessons</TableHead>
-              {/* <TableHead className="text-right"></TableHead> */}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {lessonList
-              ? lessonList.map((lesson, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell
-                      onClick={() => handleLessonClick(idx)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {lesson.name}
-                    </TableCell>
-                    <Button onClick={() => handleDelete(idx)} className="ml-4">
-                      Delete
-                    </Button>
-                  </TableRow>
-                ))
-              : "No files found"}
-            {/* {isTA && ( */}
-            <div className="flex flex-col w-[30vw]">
-              <Input
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileSelect}
-                id="fileInput"
-              />
-              <Button onClick={handleUpload}>Upload PDF</Button>
-            </div>
-            {/* )} */}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex flex-row-reverse relative w-1000">
-        <div className=" absolute flex bg-white border-solid border-2 border-blue w-1000">
-          <Button onClick={() => setShowPdfViewer((prev) => !prev)}>
-            {showPdfViewer ? ">>" : "<<"}
-          </Button>
-          {showPdfViewer &&
-            currentPdfIndex >= 0 &&
-            currentPdfIndex < lessonList.length && (
-              <div className="flex items-center justify-start w-100">
-                <Button
-                  onClick={goToPreviousPdf}
-                  disabled={currentPdfIndex <= 0}
-                >
-                  {"<"}
-                </Button>
-
-                <PdfViewer
-                  file={lessonList[currentPdfIndex].url}
-                  lessonName={lessonList[currentPdfIndex].name}
-                  /*TODO*/
-                  /* when lessonList replace with File[] */
-                  //   file={${lessonList[currentPdfIndex]}}
-                  //   lessonName={lessonList[currentPdfIndex].name}
-                />
-                <Button
-                  onClick={goToNextPdf}
-                  disabled={currentPdfIndex >= lessonList.length - 1}
-                >
-                  {">"}
-                </Button>
-              </div>
-            )}
-        </div>
-      </div>
-    </>
+          {/* )} */}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
