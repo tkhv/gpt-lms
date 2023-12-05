@@ -26,7 +26,6 @@ async function getQuizzes(courseName: string): Promise<File[]> {
   }
 
   let filesList = await res.json();
-  console.log(filesList);
   let quizzesList: File[] = filesList.filter(
     (file: File) => file.type === "quiz"
   );
@@ -36,13 +35,12 @@ async function getQuizzes(courseName: string): Promise<File[]> {
     const sasURL = await getSAS(courseName, fileName);
     quizzesList[i].url = sasURL;
   }
-  console.log(await quizzesList);
   return await quizzesList;
 }
 
 async function getSAS(courseName: string, fileName: string): Promise<string> {
   const response = await fetch(
-    `/api/${courseName}/getSAS?filename=quizzes/${fileName}`
+    `/api/${courseName}/getSAS?filename=quiz/${fileName}`
   );
 
   if (!response.ok) {
@@ -57,6 +55,7 @@ export default function Quizzes() {
   const router = useRouter();
   let { courseName } = router.query;
   const { data: session } = useSession();
+  const [quizList, setQuizList] = useState<File[]>([]);
 
   useEffect(() => {
     courseName = courseName as string;
@@ -64,8 +63,6 @@ export default function Quizzes() {
       setIsTA(true);
     }
   });
-
-  const [quizList, setQuizList] = useState<File[]>([]);
 
   useEffect(() => {
     if (typeof courseName === "string") {
