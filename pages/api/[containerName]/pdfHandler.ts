@@ -1,5 +1,7 @@
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { Pinecone } from "@pinecone-database/pinecone";
+import { PineconeStore } from "langchain/vectorstores/pinecone";
 const { DefaultAzureCredential } = require("@azure/identity");
 const { NextApiRequest, NextApiResponse } = require("next/server");
 const { BlobServiceClient } = require("@azure/storage-blob");
@@ -35,32 +37,25 @@ export default async function POST(
   });
   const docs = await loader.load();
 
-  // Getting the embeddings
-  const embeddingsModel = new OpenAIEmbeddings({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    batchSize: 512,
-  });
-  // let embeddings = [];
-  // for (const doc of docs) {
-  //   embeddings.push(await embeddingsModel.embedQuery(doc.pageContent));
-  // }
-
-  // To test the embeddings model:
-  // const embeddings = await embeddingsModel.embedQuery("Hello");
-  // console.log(embeddings);
-
-  res.status(500).json({ file: "uploadedFile" });
-}
-
-/*
-
-cost check:
-
-  // 4 characters is 1 token. 1000 tokens is 0.0001 USD.
-  const cost = 0.0001 * ("Ourtext".length / 4 / 1000);
+  // Cost check
+  const numChars = docs
+    .concat(docs)
+    .reduce((acc, doc) => acc + doc.pageContent.length, 0);
+  const cost = 0.0001 * (numChars / 4 / 1000);
+  console.log(cost);
   if (cost > 0.002) {
     res.status(400).json({ error: "Might be too expensive" });
     return;
   }
 
-*/
+  // This is commented out to prevent accidentally passing in too many tokens.
+  // Get and store the embeddings in Pinecone
+  // const pinecone = new Pinecone();
+  // const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX || "");
+  // await PineconeStore.fromDocuments(docs, new OpenAIEmbeddings(), {
+  //   pineconeIndex,
+  //   maxConcurrency: 5, // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
+  // });
+
+  res.status(500).json({ file: filename });
+}
