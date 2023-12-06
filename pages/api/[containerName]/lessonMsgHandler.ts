@@ -94,7 +94,7 @@ export default async function POST(
     }
   }
 
-  res.status(500).json({ reply: "ok" }); //response.text });
+  res.status(500).json({ reply: response.text });
 }
 
 type QuizSubmission = {
