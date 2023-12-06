@@ -13,8 +13,29 @@ export default function ChatArea() {
   ]);
 
   const sendMsgHandler = () => {
-    setMessages([...messages, currentMessage]);
-    setCurrentMessage("");
+    fetch(
+      "/api/" +
+        courseName +
+        "/lessonMsgHandler?filename=" +
+        "put.filename.here",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          usrMsg: currentMessage,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        console.log(res.reply);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          currentMessage,
+          res.reply,
+        ]);
+        setCurrentMessage("");
+      });
   };
 
   return (

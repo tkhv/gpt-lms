@@ -53,17 +53,13 @@ async function getSAS(courseName: string, fileName: string) {
   return sasURL;
 }
 
-async function embeddings(courseName: string, fileName: string) {
+async function storeEmbeddings(courseName: string, fileName: string) {
   let res = await fetch(
     "/api/" + courseName + "/pdfHander?filename=" + fileName,
     {
       method: "POST",
     }
   );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch lessons");
-  }
   console.log(res);
 }
 
@@ -138,25 +134,26 @@ export default function Lesson() {
     if (selectedFile) {
       try {
         // first get SAS URL in a GET request to getSAS with the file name as a query param
-        // const sasURL: string = await getSAS(
-        //   courseName as string,
-        //   selectedFile.name
-        // );
-        // const uploadResponse = await fetch(sasURL, {
-        //   method: "PUT",
-        //   body: selectedFile, // This should be your file
-        //   headers: {
-        //     "x-ms-blob-type": "BlockBlob",
-        //   },
-        // });
+        const sasURL: string = await getSAS(
+          courseName as string,
+          selectedFile.name
+        );
+        const uploadResponse = await fetch(sasURL, {
+          method: "PUT",
+          body: selectedFile, // This should be your file
+          headers: {
+            "x-ms-blob-type": "BlockBlob",
+          },
+        });
 
-        await embeddings(courseName as string, selectedFile.name);
-
-        // if (!uploadResponse.ok) {
-        //   throw new Error("File upload failed");
-        // }
+        if (!uploadResponse.ok) {
+          throw new Error("File upload failed");
+        }
 
         console.log("File uploaded successfully");
+
+        // Commented this out to prevent unnecessary calls to get embeddings.
+        // await storeEmbeddings(courseName as string, selectedFile.name);
 
         // Reset selected file after successful upload
         setSelectedFile(undefined);
