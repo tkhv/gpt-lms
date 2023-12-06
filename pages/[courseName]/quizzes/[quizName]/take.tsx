@@ -7,56 +7,33 @@ import { Button } from "@/components/ui/button";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { useState } from "react";
-import { QuizQuestion } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { Quiz, QuizQuestion } from "@/lib/types";
 import { useRouter } from "next/router";
 import { string } from "zod";
+
+async function getQuiz(courseName: string, quizName: string): Promise<Quiz> {
+  const response = await fetch(
+    `/api/${courseName}/getSAS?filename=quiz/${quizName}`
+  );
+
+  if (!response.ok) {
+    throw new Error("File upload failed");
+  }
+
+  const sasURL = (await response.json()).sasURL;
+  const quiz = await fetch(sasURL);
+  if (!quiz.ok) {
+    throw new Error("Failed to fetch quiz");
+  }
+
+  return await quiz.json();
+}
 
 export default function QuizTake() {
   const router = useRouter();
   const { courseName, quizName } = router.query;
-  const [questions, setQustions] = useState<QuizQuestion[]>([
-    {
-      questionNum: 1,
-      questionType: "MCQ",
-      question: "which one is the best cloud service provider",
-      options: ["AWS", "Azure", "GCP", "Oracle Cloud"],
-      answer: 2,
-      points: 10,
-    },
-    {
-      questionNum: 2,
-      questionType: "MCQ",
-      question: "string",
-      options: ["string1", "string2", "string3", "string4"],
-      answer: 3,
-      points: 10,
-    },
-    {
-      questionNum: 3,
-      questionType: "MCQ",
-      question: "string",
-      options: ["string1", "string2", "string3", "string4"],
-      answer: 1,
-      points: 10,
-    },
-    {
-      questionNum: 4,
-      questionType: "FRQ",
-      question: "string",
-      options: [],
-      answer: 0,
-      points: 80,
-    },
-    {
-      questionNum: 5,
-      questionType: "FRQ",
-      question: "string",
-      options: [],
-      answer: 0,
-      points: 80,
-    },
-  ]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
 
   const [studentAnswers, setStudentAnswers] = useState(() => {
     return questions.map((question) => ({
@@ -92,6 +69,17 @@ export default function QuizTake() {
     */
     console.log(studentAnswers);
   };
+
+  useEffect(() => {
+    if (typeof courseName === "string" && typeof quizName === "string") {
+      getQuiz(courseName, quizName)
+        .then((quiz) => {
+          // convert the list of files to a list of myFile[] with name and url
+          setQuestions(quiz.questions);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [courseName]);
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">

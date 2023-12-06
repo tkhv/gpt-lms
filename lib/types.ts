@@ -18,6 +18,18 @@ export type User = {
   courseList: string[];
 };
 
+export type Quiz = {
+  name: string;
+  questions: QuizQuestion[];
+  totalPoints: number;
+  submissions: Record<string, QuizSubmission>;
+};
+
+export type QuizSubmission = {
+  answers: string[];
+  score: number | undefined;
+};
+
 export type QuizQuestion = {
   questionNum: number;
   questionType: "MCQ" | "FRQ";
@@ -25,11 +37,4 @@ export type QuizQuestion = {
   options: string[];
   answer: number | string;
   points: number;
-};
-
-export type Quiz = {
-  name: string;
-  questions: QuizQuestion[];
-  totalPoints: number;
-  submissions: Record<string, number>; // key: username, value: score
 };
