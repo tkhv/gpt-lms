@@ -138,23 +138,21 @@ export default function Lesson() {
     if (selectedFile) {
       try {
         // first get SAS URL in a GET request to getSAS with the file name as a query param
-        // const sasURL: string = await getSAS(
-        //   courseName as string,
-        //   selectedFile.name
-        // );
-        // const uploadResponse = await fetch(sasURL, {
-        //   method: "PUT",
-        //   body: selectedFile, // This should be your file
-        //   headers: {
-        //     "x-ms-blob-type": "BlockBlob",
-        //   },
-        // });
+        const sasURL: string = await getSAS(
+          courseName as string,
+          selectedFile.name
+        );
+        const uploadResponse = await fetch(sasURL, {
+          method: "PUT",
+          body: selectedFile, // This should be your file
+          headers: {
+            "x-ms-blob-type": "BlockBlob",
+          },
+        });
 
-        await embeddings(courseName as string, selectedFile.name);
-
-        // if (!uploadResponse.ok) {
-        //   throw new Error("File upload failed");
-        // }
+        if (!uploadResponse.ok) {
+          throw new Error("File upload failed");
+        }
 
         console.log("File uploaded successfully");
 

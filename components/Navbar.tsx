@@ -10,7 +10,7 @@ const Navbar = () => {
   const { data: session } = useSession();
   const username = session?.user.name;
   const imageURL = session?.user.image;
-  const courseList = session?.user.courseList || ["cs4400"];
+  const courseList = session?.user.courseList || [];
 
   const pathName = useRouter();
 

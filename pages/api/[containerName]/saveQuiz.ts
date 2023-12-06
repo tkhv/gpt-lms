@@ -4,7 +4,7 @@ const { ContainerClient } = require("@azure/storage-blob");
 const { DefaultAzureCredential } = require("@azure/identity");
 import { Quiz } from "@/lib/types";
 
-export default async function GET(
+export default async function handler(
   req: typeof NextApiRequest,
   res: typeof NextApiResponse
 ) {

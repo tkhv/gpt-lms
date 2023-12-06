@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -25,8 +25,14 @@ export function EditQuizDialog({
 }) {
   const [questions, setQuestions] = useState<QuizQuestion[]>(propQuestions);
   const [quizName, setQuizName] = useState(propQuizName);
+  const [isQuizNew, setIsQuizNew] = useState(true);
   const router = useRouter();
   const { courseName } = router.query;
+
+  useEffect(() => {
+    setQuestions(propQuestions);
+    setIsQuizNew(false);
+  }, [propQuestions]);
 
   const handleSubmit = async () => {
     const quiz: Quiz = {
