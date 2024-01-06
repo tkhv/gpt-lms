@@ -8,6 +8,10 @@ GPT-LMS is a learning management system that leverages the Azure OpenAI Service 
 
 By generating and storing vector embeddings for all course content, we will be able to perform a similarity search with the user's query to provide our model with relevant documents from the course. This will result in context-aware answers as the model can source answers from material unique to the course as taught by the instructors. By engineering prompts using LangChain, we can also allow GPTa to output answers following a specific format, allowing GPTa to interact with the LMS' quiz creation endpoints.
 
+The following is a clip demoing the GPTa creating and publishing a quiz: 
+
+[![Thumbnail ALT TEXT](https://img.youtube.com/vi/u6olQGFCQsA/0.jpg)](https://www.youtube.com/watch?v=u6olQGFCQsA)
+
 This is a [Next.js](https://nextjs.org/) 14.0.3 project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It uses the Pages router to maintain compatability with Azure Static Web Apps as of November 2023.
 
 ## Installation
